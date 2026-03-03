@@ -1,0 +1,11 @@
+# Fichiers système Mac
+.DS_Store
+
+# Fichiers système Windows
+Thumbs.db
+
+# Configuration VS Code
+.vscode/
+
+# Logs
+*.log
