@@ -2,40 +2,52 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Switch - Le troc étudiant</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+    <title>Switch - Accueil</title>
     <style>
-        :root { --primary: #42b883; --dark: #2c3e50; --bg: #f9fafb; --text-muted: #6b7280; }
-        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: var(--dark); line-height: 1.5; }
+        /* Styles de base pour la structure */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; }
         
+        /* Header : Logo à gauche, Nav à droite */
         header { 
-            background: white; padding: 0 5%; height: 70px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 20px 5%; 
+            background: #fff; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; text-decoration: none; }
-        nav a { text-decoration: none; color: var(--dark); margin-left: 25px; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
-        nav a:hover { color: var(--primary); }
+        .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: #42b883; }
         
-        .btn-add { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; }
-        .container { padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
+        nav a { margin-left: 20px; text-decoration: none; color: #333; font-weight: 500; }
+        nav a:hover { color: #42b883; }
+
+        /* Style des sections et boutons */
+        .container { width: 80%; margin: 40px auto; text-align: center; }
+        .section-action { margin: 50px 0; padding: 30px; border: 1px solid #eee; border-radius: 10px; }
         
-        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); }
+        .btn { 
+            display: inline-block; 
+            padding: 12px 25px; 
+            background-color: #42b883; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            margin-top: 15px; 
+        }
+        .btn:hover { background-color: #33a06f; }
     </style>
 </head>
 <body>
-    <header>
-        <a href="index.php" class="logo">SWITCH.</a>
-        <nav>
-            <a href="index.php">Explorer</a>
-            <a href="#">Mes échanges</a>
-            <a href="#" class="btn-add">Déposer une annonce</a>
-        </nav>
-    </header>
-    <main class="container">
+
+<header>
+    <a href="index.php" class="logo">SWITCH</a>
+    <nav>
+        <a href="compte.php">Compte</a>
+        <a href="vendre.php">Vendre</a>
+        <a href="acheter.php">Acheter</a>
+        <a href="avis.php">Avis</a>
+    </nav>
+</header>
+
+<div class="container">
