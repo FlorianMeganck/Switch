@@ -2,52 +2,23 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Switch - Accueil</title>
-    <style>
-        /* Styles de base pour la structure */
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; }
-        
-        /* Header : Logo à gauche, Nav à droite */
-        header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 20px 5%; 
-            background: #fff; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: #42b883; }
-        
-        nav a { margin-left: 20px; text-decoration: none; color: #333; font-weight: 500; }
-        nav a:hover { color: #42b883; }
-
-        /* Style des sections et boutons */
-        .container { width: 80%; margin: 40px auto; text-align: center; }
-        .section-action { margin: 50px 0; padding: 30px; border: 1px solid #eee; border-radius: 10px; }
-        
-        .btn { 
-            display: inline-block; 
-            padding: 12px 25px; 
-            background-color: #42b883; 
-            color: white; 
-            text-decoration: none; 
-            border-radius: 5px; 
-            margin-top: 15px; 
-        }
-        .btn:hover { background-color: #33a06f; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch - Troc Étudiant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>[v-cloak] { display: none; }</style>
 </head>
-<body>
-
-<header>
-    <a href="index.php" class="logo">SWITCH</a>
-    <nav>
-        <a href="compte.php">Compte</a>
-        <a href="vendre.php">Vendre</a>
-        <a href="acheter.php">Acheter</a>
-        <a href="avis.php">Avis</a>
-    </nav>
-</header>
-
-<div class="container">
+<body class="bg-slate-50 text-slate-900">
+    <div id="app" v-cloak>
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+            <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+                <a href="index.php" class="text-2xl font-black text-emerald-600 tracking-tighter">SWITCH.</a>
+                <div class="flex items-center space-x-6 text-sm font-bold">
+                    <a href="index.php" class="hover:text-emerald-600">Accueil</a>
+                    <a href="acheter.php" class="hover:text-emerald-600">Acheter</a>
+                    <a href="vendre.php" class="bg-emerald-600 text-white px-4 py-2 rounded-full hover:bg-emerald-700">Vendre</a>
+                    <a href="connexion.php" class="border-l pl-6 border-slate-200 hover:text-emerald-600">Compte</a>
+                </div>
+            </nav>
+        </header>
+        <main class="max-w-6xl mx-auto px-6 py-12">
