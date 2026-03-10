@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Switch - Base Propre</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="node_modules/vue/dist/vue.global.js"></script>
 </head>
 <body class="bg-gray-100">
     <div id="app"> <header class="bg-white p-6 shadow mb-10 text-center">
