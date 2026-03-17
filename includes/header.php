@@ -19,7 +19,8 @@
                 <nav class="space-x-6 font-bold text-sm uppercase">
                     <a href="index.php">Accueil</a>
                     <a href="#">Troc</a>
-                    <a href="#">Compte</a>
+                    <a href="profil.php">Compte</a>
+                    <a href="ajout_produit.php">Ajout produit</a>
                 </nav>
             </div>
         </header>
