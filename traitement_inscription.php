@@ -1,31 +1,39 @@
 <?php
-// 1. On inclut la connexion à la DB
-include_once __DIR__ . '/config/db_access.php';
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-// 2. On vérifie si on a bien reçu des données via POST
+// On utilise require_once : si le fichier n'est pas trouvé, le script s'arrête net.
+// On utilise __DIR__ pour être sûr du chemin sur le serveur.
+require_once __DIR__ . '/config/db_access.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-    // 3. On récupère les données du formulaire
+    // 2. Récupération des données du formulaire
     $user = $_POST['username'];
     $mail = $_POST['email'];
     $pass = $_POST['password'];
 
-    // 4. Sécurité : On hache le mot de passe (ne jamais stocker en clair !)
+    // 3. Hachage du mot de passe pour la sécurité
     $hash = password_hash($pass, PASSWORD_DEFAULT);
 
-    // 5. On prépare la requête SQL comme dans le cours 
-    // On ne mentionne pas 'id' (auto-incrément) ni 'solde' (valeur par défaut en DB)
-    $sql = "INSERT INTO users (username, email, passwordhash) VALUES (:u, :e, :p)";
-    $statement = $connexion->prepare($sql);
+    try {
+        // 4. La requête SQL corrigée avec l'underscore (_)
+        // On prépare la requête pour éviter les injections SQL
+        $sql = "INSERT INTO users (username, email, password_hash) VALUES (:u, :e, :p)";
+        $statement = $connexion->prepare($sql);
 
-    // 6. On lie les valeurs et on exécute 
-    $statement->execute([
-        ':u' => $user,
-        ':e' => $mail,
-        ':p' => $hash
-    ]);
+        // 5. On envoie les données
+        $statement->execute([
+            ':u' => $user,
+            ':e' => $mail,
+            ':p' => $hash
+        ]);
 
-    // 7. On redirige vers l'accueil après l'insertion
-    header('Location: index.php');
-    exit();
+        // 6. Succès ! On redirige vers l'accueil
+        header('Location: index.php');
+        exit();
+
+    } catch (PDOException $e) {
+        // Si ça rate encore, ce message nous dira exactement pourquoi
+        die("Erreur SQL sur le serveur : " . $e->getMessage());
+    }
 }

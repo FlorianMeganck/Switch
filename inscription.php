@@ -3,7 +3,7 @@
 <div class="max-w-md mx-auto mt-10 bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
     <h2 class="text-2xl font-black mb-6 text-slate-800">Créer un compte Switch</h2>
     
-    <form action="traitement_inscription.php" method="post" class="space-y-4">
+    <form action="/traitement_inscription.php" method="post" class="space-y-4">
         <div>
             <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Nom d'utilisateur</label>
             <input type="text" name="username" required placeholder="Ex: JeanD" 
