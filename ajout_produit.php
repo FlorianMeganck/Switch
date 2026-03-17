@@ -1,6 +1,6 @@
 <?php 
 session_start();
-// Sécurité : si pas connecté, on dégage
+// Sécurité : si pas connecté, pas possible d'aller plus loin
 if (!isset($_SESSION['user_id'])) { header('Location: connexion.php'); exit(); }
 include 'includes/header.php'; 
 ?>
