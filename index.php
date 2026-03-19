@@ -1,5 +1,4 @@
 <?php include 'includes/header.php'; ?>
-<pre><?php session_start(); print_r($_SESSION); ?></pre>
 
 <!-- HERO / BANNIÈRE -->
 <section class="bg-gray-100 p-10 rounded-3xl text-center mb-10">
@@ -10,11 +9,8 @@
     </a>
 </section>
 
-<!-- TON BOUTON (INTOUCHABLE) -->
-<div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 text-center mb-10">
-    <h2 class="text-3xl font-black mb-4">{{ message }}</h2>
-    <p class="text-slate-500 mb-8">Test de réactivité</p>
-
+<!-- BOUTON (gardé sans le cadre) -->
+<div class="text-center mb-10">
     <button @click="compteur++"
         class="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-black hover:bg-emerald-700 transition shadow-lg shadow-emerald-100">
         Nombre de clics : {{ compteur }}
