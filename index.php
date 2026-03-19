@@ -52,7 +52,7 @@
             <img src="https://via.placeholder.com/300" class="rounded-xl mb-3">
             <h3 class="font-semibold">Veste vintage</h3>
             <p class="text-gray-500 text-sm">Taille S</p>
-            <p class="font-bold mt-2">30€</p>
+            <p class="font-bold mt-2">35€</p>
         </div>
 
     </div>
