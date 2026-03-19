@@ -25,7 +25,8 @@
 
         <!-- PRODUIT 1 -->
         <div class="bg-white rounded-2xl shadow-sm p-4 hover:shadow-md transition">
-            <img src="https://img01.ztat.net/article/spp-media-p1/92d4495e69924a80862f6f22281bc394/2230ec5fe2b44695bd1425517c8ad17e.jpg?imwidth=1800&filter=packshot" class="rounded-xl mb-3">
+           <img src="https://img01.ztat.net/article/spp-media-p1/30e4ae569d4208a0862f6f22281bc394/2230ec5fe2b44695bd1425517c8ad17e.jpg?imwidth=1800"
+     class="rounded-xl mb-3 w-full h-48 object-cover">
             <h3 class="font-semibold">Pull Nike</h3>
             <p class="text-gray-500 text-sm">Taille M</p>
             <p class="font-bold mt-2">25€</p>
