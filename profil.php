@@ -1,5 +1,6 @@
 <?php 
-session_start(); // On démarre la session pour vérifier l'état de connexion
+// On démarre la session pour vérifier l'état de connexion
+session_start(); 
 include 'includes/header.php'; 
 ?>
 
