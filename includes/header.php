@@ -14,33 +14,40 @@
 <div class="min-h-screen flex flex-col">
 
 <header class="bg-white border-b border-slate-200">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
 
-        <a href="index.php"
-           class="text-2xl font-extrabold bg-gradient-to-r from-slate-950 via-slate-700 to-slate-300 bg-clip-text text-transparent tracking-wide">
+        <!-- LOGO -->
+        <a href="index.php" class="text-2xl font-extrabold text-emerald-600">
             SWITCH.
         </a>
 
+        <!-- NAV -->
         <nav class="flex items-center gap-6 md:gap-8 font-extrabold text-base md:text-lg">
-            <a href="index.php"
-               class="inline-block bg-gradient-to-r from-slate-950 via-slate-700 to-slate-300 bg-clip-text text-transparent hover:underline hover:scale-105 transition duration-200 transform">
+
+            <!-- LIEN 1 -->
+            <a href="index.php" class="relative group">
                 ACCUEIL
+                <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
             </a>
 
-            <a href="troc.php"
-               class="inline-block bg-gradient-to-r from-slate-950 via-slate-700 to-slate-300 bg-clip-text text-transparent hover:underline hover:scale-105 transition duration-200 transform">
+            <!-- LIEN 2 -->
+            <a href="troc.php" class="relative group">
                 TROC
+                <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
             </a>
 
-            <a href="profil.php"
-               class="inline-block bg-gradient-to-r from-slate-950 via-slate-700 to-slate-300 bg-clip-text text-transparent hover:underline hover:scale-105 transition duration-200 transform">
+            <!-- LIEN 3 -->
+            <a href="profil.php" class="relative group">
                 COMPTE
+                <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
             </a>
 
-            <a href="ajout_produit.php"
-               class="inline-block bg-gradient-to-r from-slate-950 via-slate-700 to-slate-300 bg-clip-text text-transparent hover:underline hover:scale-105 transition duration-200 transform">
+            <!-- LIEN 4 -->
+            <a href="ajout_produit.php" class="relative group">
                 AJOUT PRODUIT
+                <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
             </a>
+
         </nav>
 
     </div>
