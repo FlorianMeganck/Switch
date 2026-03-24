@@ -1,11 +1,9 @@
 <?php 
-// On démarre la session pour vérifier l'état de connexion
 session_start(); 
 include 'includes/header.php'; 
 ?>
 
 <div class="max-w-2xl mx-auto mt-10 px-6">
-
     <?php if (isset($_SESSION['user_id'])): ?>
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
             <div class="bg-emerald-600 h-32"></div>
@@ -16,56 +14,39 @@ include 'includes/header.php';
                     </div>
                 </div>
                 
-                <div class="mt-16">
-                    <h2 class="text-3xl font-black text-slate-800"><?php echo $_SESSION['username']; ?></h2>
-                    <p class="text-slate-500">Membre de la communauté Switch</p>
+                <div class="mt-16 flex justify-between items-end">
+                    <div>
+                        <h2 class="text-3xl font-black text-slate-800"><?php echo htmlspecialchars($_SESSION['username']); ?></h2>
+                        <p class="text-slate-500">Membre de la communauté Switch</p>
+                    </div>
+                    <a href="deconnexion.php" class="text-sm font-bold text-red-500 hover:underline mb-1">Se déconnecter</a>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mt-8">
                     <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
                         <span class="block text-[10px] font-black uppercase text-slate-400 mb-1">Mon Solde</span>
-                        <span class="text-2xl font-black text-emerald-600">0 Switchs</span>
+                        <span class="text-2xl font-black text-emerald-600">0.00 SW</span>
                     </div>
                     <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                        <span class="block text-[10px] font-black uppercase text-slate-400 mb-1">Trocs effectués</span>
-                        <span class="text-2xl font-black text-slate-800">0</span>
+                        <span class="block text-[10px] font-black uppercase text-slate-400 mb-1">Objets en ligne</span>
+                        <span class="text-2xl font-black text-slate-800">1</span>
                     </div>
                 </div>
 
-                <a href="deconnexion.php" class="block mt-8 text-center text-sm font-bold text-red-500 hover:underline">
-                    Se déconnecter
-                </a>
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">Mes annonces</h3>
+                    <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-slate-200 rounded-lg flex items-center justify-center">📦</div>
+                            <p class="font-bold text-slate-800">Dernier objet ajouté</p>
+                        </div>
+                        <a href="editer_produit.php" class="text-sm font-bold text-emerald-600 hover:underline">Modifier</a>
+                    </div>
+                </div>
             </div>
         </div>
-
     <?php else: ?>
-        <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 max-w-md mx-auto">
-            <h2 class="text-2xl font-black mb-6 text-slate-800">Connexion</h2>
-            
-            <form action="traitement_connexion.php" method="post" class="space-y-4">
-                <div>
-                    <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Email</label>
-                    <input type="email" name="email" required placeholder="nom@student.hepl.be" 
-                           class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Mot de passe</label>
-                    <input type="password" name="password" required placeholder="••••••••" 
-                           class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                </div>
-
-                <button type="submit" class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl hover:bg-emerald-700 transition shadow-lg mt-4">
-                    Se connecter
-                </button>
-            </form>
-            
-            <p class="mt-6 text-center text-sm text-slate-500">
-                Pas encore de compte ? <a href="inscription.php" class="text-emerald-600 font-bold">S'inscrire</a>
-            </p>
-        </div>
-    <?php endif; ?>
-
+        <?php endif; ?>
 </div>
 
 <?php include 'includes/footer.php'; ?>

@@ -5,8 +5,8 @@ include 'includes/header.php';
 require_once __DIR__ . '/config/db_access.php';
 
 try {
-    // On va chercher les 4 derniers articles qui ne sont pas encore vendus (is_sold = 0)
-    $sql = "SELECT * FROM products WHERE is_sold = 0 ORDER BY id DESC LIMIT 4";
+    // Trouve la ligne de ta requête SQL au début du fichier
+    $sql = "SELECT * FROM products WHERE is_sold = 'non' ORDER BY id DESC LIMIT 4";
     $statement = $connexion->query($sql);
     $produits = $statement->fetchAll();
 } catch (PDOException $e) {
@@ -36,21 +36,30 @@ try {
     <section>
         <h2 class="text-2xl font-bold mb-6">🔥 Derniers objets ajoutés</h2>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <?php if (count($produits) > 0): ?>
-                <?php foreach ($produits as $produit): ?>
-                    <article class="bg-white p-4 rounded-2xl shadow border border-slate-100">
-                        <img src="https://via.placeholder.com/200?text=Switch" class="rounded-xl mb-3 w-full object-cover h-40">
-                        
-                        <h3 class="font-bold truncate text-slate-800"><?php echo htmlspecialchars($produit['name']); ?></h3>
-                        <p class="text-sm text-slate-500"><?php echo htmlspecialchars($produit['condition']); ?></p>
-                        <p class="font-bold mt-2 text-emerald-600"><?php echo htmlspecialchars($produit['price']); ?> Switchs</p>
-                    </article>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="col-span-4 text-center text-slate-500 py-10">Aucun objet n'a encore été mis en ligne. Sois le premier !</p>
-            <?php endif; ?>
-        </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <?php if (count($produits) > 0): ?>
+        <?php foreach ($produits as $produit): ?>
+            
+            <article class="bg-white p-4 rounded-2xl shadow border border-slate-100 relative group">
+                
+                <a href="editer_produit.php?id=<?php echo $produit['id']; ?>" 
+                   class="absolute top-3 right-3 bg-white/90 w-8 h-8 rounded-full shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-emerald-50 text-xs"
+                   title="Modifier cet article">
+                   ✏️
+                </a>
+
+                <img src="https://via.placeholder.com/200?text=Switch" class="rounded-xl mb-3 w-full object-cover h-40">
+                
+                <h3 class="font-bold truncate text-slate-800"><?php echo htmlspecialchars($produit['name']); ?></h3>
+                <p class="text-sm text-slate-500"><?php echo htmlspecialchars($produit['condition']); ?></p>
+                <p class="font-bold mt-2 text-emerald-600"><?php echo htmlspecialchars($produit['price']); ?> Switchs</p>
+            </article>
+
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p class="col-span-4 text-center text-slate-500 py-10">Aucun objet disponible.</p>
+    <?php endif; ?>
+</div>
 
         <div class="text-center mt-8">
             <a href="troc.php" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-emerald-700 transition shadow-lg">
@@ -78,13 +87,6 @@ try {
                 <p class="text-slate-600 text-sm">Contacte les vendeurs.</p>
             </div>
         </div>
-    </section>
-
-    <section class="text-center bg-white rounded-2xl p-6 shadow border border-slate-100 max-w-sm mx-auto">
-        <p class="text-slate-600 mb-3 font-bold">{{ message }}</p>
-        <button @click="compteur++" class="bg-slate-800 text-white px-6 py-2 rounded-xl font-bold shadow hover:bg-black transition">
-            Cliques : {{ compteur }}
-        </button>
     </section>
 
 </main>
