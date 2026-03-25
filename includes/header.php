@@ -30,7 +30,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <a href="ajout_produit.php" class="text-emerald-600 border border-emerald-600 px-3 py-1 rounded hover:bg-emerald-50 transition">Ajout produit</a>
                         <a href="profil.php" class="hover:text-emerald-600">Mon Compte</a>
                     <?php else: ?>
-                        <a href="profil.php" class="hover:text-emerald-600">Connexion</a>
+                        <a href="connexion.php" class="hover:text-emerald-600">Connexion</a>
                     <?php endif; ?>
                 </nav>
             </div>
