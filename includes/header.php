@@ -1,5 +1,5 @@
 <?php
-// 1. Démarrage sécurisé de la session
+// Démarrage sécurisé de la session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -18,7 +18,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Vue JS -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <!-- STYLE POUR ANIMATION NAV -->
+    <!-- STYLE NAVIGATION -->
     <style>
         /* Lien de navigation */
         .nav-link {
@@ -27,20 +27,20 @@ if (session_status() === PHP_SESSION_NONE) {
             transition: transform 0.2s ease;
         }
 
-        /* Effet agrandissement */
+        /* Effet zoom */
         .nav-link:hover {
             transform: scale(1.1);
         }
 
-        /* Ligne cachée */
+        /* Ligne en dessous */
         .nav-link::after {
             content: "";
             position: absolute;
             left: 0;
             bottom: -4px;
             width: 0%;
-            height: 2px;
-            background-color: #059669; /* vert SWITCH */
+            height: 3px; /* épaisseur = effet gras */
+            background-color: black; /* couleur noire */
             transition: width 0.3s ease;
         }
 
