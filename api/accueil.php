@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 
 // Connexion à la base de données (située dans le même dossier api/)
-require_once 'db_access.php';
+require_once __DIR__ . '/db_access.php';
 
 try {
     // On récupère les 4 derniers produits non vendus

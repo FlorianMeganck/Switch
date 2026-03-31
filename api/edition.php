@@ -1,6 +1,12 @@
 <?php
 session_start();
-require_once __DIR__ . '/config/db_access.php';
+header('Content-Type: application/json');
+require_once __DIR__ . '/db_access.php';
+
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Action non autorisée.']);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['product_id'];
@@ -16,8 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $st->execute([
             ':n' => $name, ':d' => $desc, ':p' => $price, ':co' => $cond, ':ca' => $cat, ':id' => $id
         ]);
-        header('Location: index.php?status=updated');
+        
+        echo json_encode(['success' => true, 'message' => 'Mise à jour réussie.']);
     } catch (PDOException $e) {
-        die("Erreur de mise à jour : " . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Erreur de mise à jour.']);
     }
 }

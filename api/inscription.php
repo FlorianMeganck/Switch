@@ -1,54 +1,47 @@
 <?php
-// 1. On active le rapport d'erreurs pour le débug sur le serveur de l'école
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+session_start();
+header('Content-Type: application/json');
 
-// 2. Inclusion de la connexion à la base de données
-// On utilise require_once : si le fichier manque, le script s'arrête immédiatement.
-require_once __DIR__ . '/config/db_access.php';
+// 1. On utilise le chemin relatif direct
+require_once 'db_access.php'; 
 
-// 3. On vérifie que les données arrivent bien via la méthode POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-    // Récupération des données envoyées par le formulaire
-    $user = $_POST['username'];
-    $mail = $_POST['email'];
-    $pass = $_POST['password'];
+    $user = $_POST['username'] ?? null;
+    $mail = $_POST['email'] ?? null;
+    $pass = $_POST['password'] ?? null;
 
-    // 4. SÉCURITÉ : Hachage du mot de passe
-    // On ne stocke jamais le mot de passe en clair.
+    if (!$user || !$mail || !$pass) {
+        echo json_encode(['success' => false, 'message' => 'Tous les champs sont obligatoires.']);
+        exit;
+    }
+
     $hash = password_hash($pass, PASSWORD_DEFAULT);
 
     try {
-        // 5. Préparation de la requête SQL
-        // On utilise des marqueurs (:u, :e, :p) pour contrer les injections SQL.
+        // 2. Vérification si l'email existe déjà
+        $check = $connexion->prepare("SELECT id FROM users WHERE email = ?");
+        $check->execute([$mail]);
+        
+        if ($check->fetch()) {
+            echo json_encode(['success' => false, 'message' => 'Cet email est déjà utilisé.']);
+            exit;
+        }
+
+        // 3. Insertion (Vérifie bien que tes colonnes s'appellent username, email, password_hash)
         $sql = "INSERT INTO users (username, email, password_hash) VALUES (:u, :e, :p)";
         $statement = $connexion->prepare($sql);
+        $statement->execute([':u' => $user, ':e' => $mail, ':p' => $hash]);
 
-        // 6. Exécution de la requête avec les données sécurisées
-        $statement->execute([
-            ':u' => $user,
-            ':e' => $mail,
-            ':p' => $hash
-        ]);
-
-        // 7. CONNEXION AUTOMATIQUE : On ouvre la session
-        session_start();
-        
-        // On récupère l'ID que la base de données vient de générer (grâce à l'Auto-Incrément)
         $_SESSION['user_id'] = $connexion->lastInsertId();
         $_SESSION['username'] = $user;
 
-        // 8. REDIRECTION : On envoie l'utilisateur vers son profil
-        header('Location: profil.php');
-        exit();
+        echo json_encode([
+            'success' => true, 
+            'user' => ['username' => $user, 'id' => $_SESSION['user_id']]
+        ]);
 
     } catch (PDOException $e) {
-        // En cas d'erreur (ex: email déjà utilisé), on affiche le message pour comprendre
-        die("Erreur SQL : " . $e->getMessage());
+        // CORRECTION ICI : On utilise des guillemets doubles pour éviter le bug de l'apostrophe
+        echo json_encode(['success' => false, 'message' => "Erreur lors de l'inscription technique."]);
     }
-} else {
-    // Si quelqu'un tente d'accéder au fichier sans passer par le formulaire
-    header('Location: inscription.php');
-    exit();
 }

@@ -129,6 +129,41 @@
                 </p>
             </div>
 
+            <div v-else-if="page === 'inscription'" class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
+                <h2 class="text-2xl font-black mb-6 text-slate-800">Créer un compte</h2>
+                
+                <form @submit.prevent="register" class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Nom d'utilisateur</label>
+                        <input type="text" v-model="registerForm.username" required 
+                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Email</label>
+                        <input type="email" v-model="registerForm.email" required 
+                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Mot de passe</label>
+                        <input type="password" v-model="registerForm.password" required 
+                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+
+                    <p v-if="message" class="text-red-500 text-xs font-bold mt-2 ml-1">{{ message }}</p>
+
+                    <button type="submit" class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl hover:bg-emerald-700 transition shadow-lg mt-4">
+                        S'inscrire
+                    </button>
+                </form>
+                
+                <p class="text-center mt-6 text-sm text-slate-500">
+                    Déjà un compte ? 
+                    <button @click="page = 'connexion'" class="text-black font-bold">Se connecter</button>
+                </p>
+            </div>
+
             <div v-else-if="page === 'vendre'">
                 <h1 class="text-3xl font-bold">Mettre un objet en vente</h1>
             </div>
@@ -137,9 +172,50 @@
                 <h1 class="text-3xl font-bold">Tous les objets</h1>
             </div>
 
-            <div v-else-if="page === 'profil'">
-                <h1 class="text-3xl font-bold">Mon Profil</h1>
+            <div v-else-if="page === 'profil'" class="max-w-2xl mx-auto mt-10 px-6">
+
+            <div v-if="user" class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+                <div class="bg-emerald-600 h-32"></div>
+                
+                <div class="px-8 pb-8">
+                    <div class="relative">
+                        <div class="absolute -top-12 left-0 w-24 h-24 bg-slate-200 rounded-2xl border-4 border-white flex items-center justify-center text-3xl font-black text-slate-400">
+                            {{ user.username.charAt(0).toUpperCase() }}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-16 flex justify-between items-end">
+                        <div>
+                            <h2 class="text-3xl font-black text-slate-800">{{ user.username }}</h2>
+                            <p class="text-slate-500">Membre de la communauté Switch</p>
+                        </div>
+                        <button @click="logout" class="text-sm font-bold text-red-500 hover:underline mb-1">Se déconnecter</button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mt-8">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <span class="block text-[10px] font-black uppercase text-slate-400 mb-1">Mon Solde</span>
+                            <span class="text-2xl font-black text-emerald-600">0.00 SW</span>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <span class="block text-[10px] font-black uppercase text-slate-400 mb-1">Objets en ligne</span>
+                            <span class="text-2xl font-black text-slate-800">1</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-10">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Mes annonces</h3>
+                        <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-slate-200 rounded-lg flex items-center justify-center">📦</div>
+                                <p class="font-bold text-slate-800">Dernier objet ajouté</p>
+                            </div>
+                            <button @click="page = 'vendre'" class="text-sm font-bold text-emerald-600 hover:underline">Modifier</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
 
         </main>
 

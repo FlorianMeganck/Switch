@@ -3,43 +3,99 @@ const { createApp } = Vue
 createApp({
     data() {
         return {
-            // Gère l'affichage des sections (v-if="page === ...")
             page: 'accueil',
-            
-            // Stocke l'utilisateur quand il est connecté
             user: null,
-            
-            // Données du formulaire de connexion
-            loginForm: {
-                email: '',
-                password: ''
-            },
-            
-            // Message d'erreur éventuel
-            message: '',
-
-            // Quelques objets pour remplir ta grille au début
-            produits: [
-                { id: 1, name: "Pull Vintage", condition: "Très bon état", price: 15, image: null },
-                { id: 2, name: "Casque Audio", condition: "Neuf", price: 40, image: null },
-                { id: 3, name: "Livre de Design", condition: "Bon état", price: 5, image: null },
-                { id: 4, name: "Plante Verte", condition: "En forme", price: 10, image: null }
-            ]
+            loginForm: { email: '', password: '' },
+            registerForm: { username: '', email: '', password: '' },
+            produits: [],
+            message: ''
         }
     },
     methods: {
-        login() {
-            // Une vérification très simple : si l'email et le pass ne sont pas vides
-            if (this.loginForm.email !== "" && this.loginForm.password !== "") {
-                // On crée un utilisateur fictif
-                this.user = {
-                    username: this.loginForm.email.split('@')[0] // Prend le nom avant l'arobase
-                };
-                // On redirige vers l'accueil
+        // Vérifie si une session PHP existe au chargement de la page
+        async checkSession() {
+            try {
+                const response = await fetch('api/check_session.php');
+                const data = await response.json();
+                
+                if (data.connected) {
+                    this.user = data.user;
+                }
+            } catch (err) {
+                console.error("Erreur lors de la vérification de la session", err);
+            }
+        },
+
+        // Charge les 4 derniers produits pour l'accueil
+        async fetchProduits() {
+            try {
+                const response = await fetch('api/accueil.php');
+                this.produits = await response.json();
+            } catch (err) {
+                console.error("Erreur chargement produits:", err);
+            }
+        },
+
+        // Gère la connexion
+        async login() {
+            const formData = new FormData();
+            formData.append('email', this.loginForm.email);
+            formData.append('password', this.loginForm.password);
+
+            const response = await fetch('api/connexion.php', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                this.user = data.user;
                 this.page = 'accueil';
+                this.message = '';
             } else {
-                this.message = "Veuillez remplir tous les champs.";
+                this.message = data.message;
+            }
+        },
+
+        // Gère l'inscription
+        async register() {
+            const formData = new FormData();
+            formData.append('username', this.registerForm.username);
+            formData.append('email', this.registerForm.email);
+            formData.append('password', this.registerForm.password);
+
+            const response = await fetch('api/inscription.php', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                this.user = data.user;
+                this.page = 'accueil';
+                this.message = '';
+            } else {
+                this.message = data.message;
+            }
+        },
+
+        // --- NOUVELLE MÉTHODE DE DÉCONNEXION ---
+        async logout() {
+            try {
+                // On appelle le script PHP qui détruit la session
+                await fetch('api/deconnexion.php'); 
+                
+                // On réinitialise l'interface
+                this.user = null;
+                this.page = 'accueil';
+            } catch (err) {
+                console.error("Erreur lors de la déconnexion", err);
             }
         }
+    },
+    mounted() {
+        // Exécuté automatiquement à chaque rafraîchissement
+        this.checkSession();   //
+        this.fetchProduits();  //
     }
 }).mount('#app')
