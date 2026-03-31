@@ -10,25 +10,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $condition = $_POST['condition'];
     $seller_id = $_SESSION['user_id'];
-    
-    $category_id = $_POST['category_id']; // L'ID existant
-    $new_cat = trim($_POST['new_category_name']); // Le nom potentiel d'une nouvelle catégorie
+    $category_id = $_POST['category_id'];
+    $new_cat = trim($_POST['new_category_name']);
+
+    // --- GESTION DE L'IMAGE ---
+    $image_name = null; // Par défaut, pas d'image
+
+    if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === 0) {
+        $upload_dir = 'uploads/';
+        
+        // On crée un nom unique pour éviter que deux photos "image.jpg" s'écrasent
+        $extension = pathinfo($_FILES['product_image']['name'], PATHINFO_EXTENSION);
+        $image_name = uniqid() . '.' . $extension; 
+        $target_path = $upload_dir . $image_name;
+
+        // On déplace le fichier du dossier temporaire vers ton dossier uploads
+        move_uploaded_file($_FILES['product_image']['tmp_name'], $target_path);
+    }
 
     try {
-        // 🚀 LOGIQUE : Si l'utilisateur a écrit une nouvelle catégorie
+        // Logique catégorie (que tu as déjà)
         if (!empty($new_cat)) {
-            // 1. On l'insère dans la table 'categorys'
-            $sqlCat = "INSERT INTO categorys (name) VALUES (:name)";
-            $stmtCat = $connexion->prepare($sqlCat);
+            $stmtCat = $connexion->prepare("INSERT INTO categorys (name) VALUES (:name)");
             $stmtCat->execute([':name' => $new_cat]);
-            
-            // 2. On récupère l'ID que la DB vient de lui donner
             $category_id = $connexion->lastInsertId();
         }
 
-        // 3. On insère le produit avec le bon category_id (nouveau ou ancien)
-        $sql = "INSERT INTO products (name, description, price, `condition`, seller_id, category_id, is_sold) 
-                VALUES (:n, :d, :p, :co, :s, :ca, 'non')";
+        // INSERTION DU PRODUIT (On ajoute la colonne 'image' ici)
+        $sql = "INSERT INTO products (name, description, price, `condition`, seller_id, category_id, is_sold, image) 
+                VALUES (:n, :d, :p, :co, :s, :ca, 'non', :img)";
         
         $statement = $connexion->prepare($sql);
         $statement->execute([
@@ -37,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':p'  => $price,
             ':co' => $condition,
             ':s'  => $seller_id,
-            ':ca' => $category_id
+            ':ca' => $category_id,
+            ':img' => $image_name // On enregistre le nom du fichier
         ]);
 
         header('Location: index.php?success=added');

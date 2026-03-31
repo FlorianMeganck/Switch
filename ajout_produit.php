@@ -10,11 +10,10 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/config/db_access.php';
 
 try {
-    // On récupère toutes les catégories pour les afficher dans le menu déroulant
     $queryCat = $connexion->query("SELECT * FROM categorys ORDER BY name ASC");
     $categories = $queryCat->fetchAll();
 } catch (PDOException $e) {
-    $categories = []; // En cas d'erreur, on prévoit un tableau vide
+    $categories = []; 
 }
 
 include 'includes/header.php'; 
@@ -23,7 +22,7 @@ include 'includes/header.php';
 <div class="max-w-xl mx-auto mt-10 bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
     <h2 class="text-2xl font-black mb-6 text-slate-800">Publier une annonce</h2>
     
-    <form action="traitement_produit.php" method="post" class="space-y-4">
+    <form action="traitement_produit.php" method="post" enctype="multipart/form-data" class="space-y-4">
         
         <div>
             <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Nom de l'objet</label>
@@ -55,6 +54,12 @@ include 'includes/header.php';
                 <input type="text" name="new_category_name" placeholder="Ex: Sport, Kot, Jeux..." 
                        class="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
             </div>
+        </div>
+
+        <div>
+            <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Photo de l'objet</label>
+            <input type="file" name="product_image" accept="image/*"
+                   class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
         </div>
         
         <div>

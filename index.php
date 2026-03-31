@@ -56,7 +56,10 @@ try {
 
                     <div class="bg-white p-4 rounded-2xl shadow">
 
-                        <img src="https://loremflickr.com/400/300/<?php echo urlencode($produit['name']); ?>/all" class="rounded-xl mb-3 w-full">
+                        <?php 
+                            $imagePath = !empty($produit['image']) ? 'uploads/' . $produit['image'] : 'img/default.jpg'; 
+                        ?>
+                        <img src="<?php echo $imagePath; ?>" class="rounded-xl mb-3 w-full h-40 object-cover">
 
                         <h3 class="font-bold">
                             <?php echo htmlspecialchars($produit['name']); ?>
