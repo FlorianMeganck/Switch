@@ -17,7 +17,6 @@ try {
 
 <main id="app" class="max-w-6xl mx-auto px-6 py-10 space-y-16">
 
-    <!-- SECTION HERO -->
     <section class="bg-slate-100 rounded-3xl p-10 flex flex-col md:flex-row justify-between items-center gap-10">
 
         <div class="max-w-md">
@@ -29,7 +28,6 @@ try {
                 SWITCH est une plateforme entre étudiants pour acheter, vendre ou échanger.
             </p>
 
-            <!-- Boutons -->
             <div class="flex gap-3">
                 <a href="ajout_produit.php" class="bg-black text-white px-6 py-3 rounded-xl font-bold">
                     Vendre
@@ -41,12 +39,11 @@ try {
             </div>
         </div>
 
-        <img src="https://via.placeholder.com/300x200" class="rounded-xl shadow hidden md:block">
+        <img src="https://picsum.photos/600/400" class="rounded-xl shadow hidden md:block">
 
     </section>
 
 
-    <!-- SECTION PRODUITS -->
     <section>
         <h2 class="text-2xl font-bold mb-6">
             🔥 Derniers objets ajoutés
@@ -59,7 +56,7 @@ try {
 
                     <div class="bg-white p-4 rounded-2xl shadow">
 
-                        <img src="https://via.placeholder.com/200" class="rounded-xl mb-3 w-full">
+                        <img src="https://loremflickr.com/400/300/<?php echo urlencode($produit['name']); ?>/all" class="rounded-xl mb-3 w-full">
 
                         <h3 class="font-bold">
                             <?php echo htmlspecialchars($produit['name']); ?>
@@ -91,7 +88,6 @@ try {
     </section>
 
 
-    <!-- SECTION EXPLICATION -->
     <section>
         <h2 class="text-2xl font-bold text-center mb-10">
             Comment fonctionne SWITCH ?
