@@ -3,11 +3,11 @@
 header('Content-Type: application/json');
 
 // Connexion à la base de données (située dans le même dossier api/)
-require_once __DIR__ . '/db_access.php';
+require_once 'db_access.php';
 
 try {
-    // On récupère les 4 derniers produits non vendus
-    $sql = "SELECT id, name, price, `condition`, image 
+    // MODIFICATION : On ajoute seller_id dans la liste pour que Vue.js sache qui a posté l'objet
+    $sql = "SELECT id, name, price, `condition`, image, seller_id 
             FROM products 
             WHERE is_sold = 'non' 
             ORDER BY id DESC 

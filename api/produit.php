@@ -1,7 +1,7 @@
 <?php
 session_start();
 header('Content-Type: application/json');
-require_once __DIR__ . '/db_access.php';
+require_once 'db_access.php';
 
 // Sécurité : Vérifier si l'étudiant est connecté
 if (!isset($_SESSION['user_id'])) {
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $image_name = uniqid() . '.' . $extension; 
-        move_uploaded_file($file['tmp_name'], 'uploads/' . $image_name);
+        move_uploaded_file($file['tmp_name'], '../uploads/' . $image_name);
     }
 
     try {
@@ -54,6 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => true, 'message' => 'Produit ajouté avec succès !']);
 
     } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Erreur technique : ' . $e->getMessage()]);
+        echo json_encode(['success' => false, 'message' => 'Erreur, veuillez réessayer : ' . $e->getMessage()]);
     }
 }

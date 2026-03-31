@@ -1,7 +1,7 @@
 <?php
 session_start();
 header('Content-Type: application/json');
-require_once __DIR__ . '/db_access.php';
+require_once 'db_access.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Action non autorisée.']);
@@ -15,16 +15,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $cond = $_POST['condition'];
     $cat = $_POST['category_id'];
+    $new_cat = trim($_POST['new_category_name'] ?? '');
 
     try {
-        $sql = "UPDATE products SET name = :n, description = :d, price = :p, `condition` = :co, category_id = :ca WHERE id = :id";
+        // 1. Gestion d'une nouvelle catégorie
+        if (!empty($new_cat)) {
+            $stmtCat = $connexion->prepare("INSERT INTO categorys (name) VALUES (:name)");
+            $stmtCat->execute([':name' => $new_cat]);
+            $cat = $connexion->lastInsertId();
+        }
+
+        // 2. Gestion de la nouvelle photo (si envoyée)
+        $image_sql = "";
+        $params = [':n' => $name, ':d' => $desc, ':p' => $price, ':co' => $cond, ':ca' => $cat, ':id' => $id];
+
+        if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === 0) {
+            $file = $_FILES['product_image'];
+            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $image_name = uniqid() . '.' . $ext;
+            
+            // On sort de api/ vers uploads/
+            if (move_uploaded_file($file['tmp_name'], '../uploads/' . $image_name)) {
+                $image_sql = ", image = :img";
+                $params[':img'] = $image_name;
+            }
+        }
+
+        // 3. Mise à jour SQL
+        $sql = "UPDATE products SET name = :n, description = :d, price = :p, `condition` = :co, category_id = :ca $image_sql WHERE id = :id";
         $st = $connexion->prepare($sql);
-        $st->execute([
-            ':n' => $name, ':d' => $desc, ':p' => $price, ':co' => $cond, ':ca' => $cat, ':id' => $id
-        ]);
+        $st->execute($params);
         
         echo json_encode(['success' => true, 'message' => 'Mise à jour réussie.']);
     } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Erreur de mise à jour.']);
+        echo json_encode(['success' => false, 'message' => 'Erreur technique.']);
     }
 }
