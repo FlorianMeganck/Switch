@@ -6,7 +6,6 @@
     <title>SWITCH - La plateforme d'échange</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 
@@ -48,7 +47,7 @@
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-6">Derniers objets ajoutés</h2>
+                    <h2 class="text-2xl font-bold mb-6">🔥 Derniers objets ajoutés</h2>
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <div v-for="produit in produits" :key="produit.id" class="bg-white p-4 rounded-2xl shadow">
@@ -77,7 +76,17 @@
                             <h3 class="font-bold">Publie</h3>
                             <p class="text-sm text-slate-600">Ajoute ton produit</p>
                         </div>
+                        <div class="bg-white p-6 rounded-2xl shadow">
+                            <div class="text-3xl">🔎</div>
+                            <h3 class="font-bold">Explore</h3>
+                            <p class="text-sm text-slate-600">Regarde les articles</p>
                         </div>
+                        <div class="bg-white p-6 rounded-2xl shadow">
+                            <div class="text-3xl">🤝</div>
+                            <h3 class="font-bold">Échange</h3>
+                            <p class="text-sm text-slate-600">Contacte les vendeurs</p>
+                        </div>
+                    </div>
                 </section>
 
             </div>
@@ -86,12 +95,16 @@
                 <h1 class="text-3xl font-bold">Page Connexion</h1>
             </div>
 
-            <div v-else-if="page === 'profil'">
-                <h1 class="text-3xl font-bold">Mon Profil</h1>
+            <div v-else-if="page === 'vendre'">
+                <h1 class="text-3xl font-bold">Mettre un objet en vente</h1>
             </div>
 
-            <div v-else-if="page === 'inscription'">
-                 <h1 class="text-3xl font-bold">Créer un compte</h1>
+            <div v-else-if="page === 'troc'">
+                <h1 class="text-3xl font-bold">Tous les objets</h1>
+            </div>
+
+            <div v-else-if="page === 'profil'">
+                <h1 class="text-3xl font-bold">Mon Profil</h1>
             </div>
 
         </main>
