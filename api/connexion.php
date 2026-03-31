@@ -25,11 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         } else {
             // 4. ÉCHEC : On renvoie à la page de connexion avec un message d'erreur
-            header('Location: connexion.php?error=1');
+            header('Location: connexion.php?error=1'); // les redirections ne se feront plus
             exit();
         }
 
     } catch (PDOException $e) {
-        die("Erreur SQL : " . $e->getMessage());
+        die("Erreur SQL : " . $e->getMessage()); // Changer la méthode d'erreur
     }
 }
+
+// mettre le backend dasn un dossier api

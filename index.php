@@ -7,7 +7,11 @@ require_once __DIR__ . '/config/db_access.php';
 
 try {
     // On récupère les 4 derniers produits non vendus
-    $sql = "SELECT * FROM products WHERE is_sold = 'non' ORDER BY id DESC LIMIT 4";
+    $sql = 
+    "SELECT * 
+    FROM products 
+    WHERE is_sold = 'non' 
+    ORDER BY id DESC LIMIT 4";
     $statement = $connexion->query($sql);
     $produits = $statement->fetchAll();
 } catch (PDOException $e) {

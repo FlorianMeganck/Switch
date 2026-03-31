@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':img' => $image_name 
         ]);
 
-        header('Location: index.php?success=added');
+        header('Location: index.php?success=added'); 
         exit();
 
     } catch (PDOException $e) {
