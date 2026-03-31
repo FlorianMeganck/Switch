@@ -1,37 +1,47 @@
 <?php
-session_start(); // On démarre la session pour pouvoir connecter l'utilisateur
-require_once __DIR__ . '/config/db_access.php'; // Connexion DB
+// 1. Configuration de base (Sécurité & Format)
+session_start();
+header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $mail = $_POST['email'];
-    $pass = $_POST['password'];
+// 2. Connexion DB (Correction du chemin car on est dans /api)
+require_once __DIR__ . '/../config/db_access.php';
 
-    try {
-        // 1. On cherche l'utilisateur par son email
-        $sql = "SELECT * FROM users WHERE email = :e";
-        $statement = $connexion->prepare($sql);
-        $statement->execute([':e' => $mail]);
-        $user = $statement->fetch(); // On récupère la ligne correspondante
+// 3. Vérification que les données arrivent bien
+$email = $_POST['email'] ?? null;
+$password = $_POST['password'] ?? null;
 
-        // 2. On vérifie si l'utilisateur existe ET si le mot de passe est bon
-        if ($user && password_verify($pass, $user['password_hash'])) {
-            
-            // 3. SUCCÈS : On crée les variables de session
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-
-            // Redirection vers le profil
-            header('Location: profil.php');
-            exit();
-        } else {
-            // 4. ÉCHEC : On renvoie à la page de connexion avec un message d'erreur
-            header('Location: connexion.php?error=1'); // les redirections ne se feront plus
-            exit();
-        }
-
-    } catch (PDOException $e) {
-        die("Erreur SQL : " . $e->getMessage()); // Changer la méthode d'erreur
-    }
+if (!$email || !$password) {
+    echo json_encode(['success' => false, 'message' => 'Veuillez remplir tous les champs.']);
+    exit;
 }
 
-// mettre le backend dasn un dossier api
+try {
+    // 4. Recherche de l'utilisateur
+    $stmt = $connexion->prepare("SELECT * FROM users WHERE email = :e");
+    $stmt->execute([':e' => $email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // 5. Vérification du mot de passe
+    if ($user && password_verify($password, $user['password_hash'])) {
+        
+        // SUCCÈS : On remplit la session
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+
+        // On renvoie juste ce dont vue.js a besoin
+        echo json_encode([
+            'success' => true,
+            'user' => [
+                'username' => $user['username'],
+                'id' => $user['id']
+            ]
+        ]);
+    } else {
+        // ÉCHEC : Identifiants incorrects
+        echo json_encode(['success' => false, 'message' => 'Email ou mot de passe incorrect.']);
+    }
+
+} catch (PDOException $e) {
+    // ERREUR SQL : On renvoie un message propre au lieu de die()
+    echo json_encode(['success' => false, 'message' => 'Une erreur technique est survenue.']);
+}

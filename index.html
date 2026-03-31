@@ -13,22 +13,31 @@
 
     <div id="app">
 
-        <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-            <div class="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
-                <div @click="page = 'accueil'" class="text-2xl font-black text-emerald-600 cursor-pointer">
-                    SWITCH
-                </div>
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            
+            <div class="flex gap-8 items-center">
+                <h1 @click="page = 'accueil'" class="text-xl font-bold cursor-pointer uppercase tracking-wider">Switch</h1>
                 
-                <div class="flex gap-6 items-center">
-                    <button @click="page = 'accueil'" class="text-sm font-bold hover:text-emerald-600 transition">Accueil</button>
-                    <button @click="page = 'troc'" class="text-sm font-bold hover:text-emerald-600 transition">Troc</button>
-                    
-                    <button @click="page = 'connexion'" class="bg-black text-white px-4 py-2 rounded-xl text-sm font-bold">
-                        Connexion
-                    </button>
+                <div class="flex gap-6">
+                    <button @click="page = 'accueil'" class="text-sm font-semibold hover:text-emerald-600">Accueil</button>
+                    <button @click="page = 'troc'" class="text-sm font-semibold hover:text-emerald-600">Troc</button>
                 </div>
             </div>
-        </nav>
+
+            <div>
+                <button v-if="!user" @click="page = 'connexion'" class="bg-black text-white px-5 py-2 rounded-xl text-sm font-bold">
+                    Connexion
+                </button>
+                
+                <button v-else @click="page = 'profil'" class="font-bold text-emerald-600 flex items-center gap-2">
+                    <span>{{ user.username }}</span>
+                    <span class="text-lg">👤</span>
+                </button>
+            </div>
+            
+        </div>
+    </nav>
 
         <main class="max-w-6xl mx-auto px-6 py-10">
 
@@ -91,8 +100,33 @@
 
             </div>
 
-            <div v-else-if="page === 'connexion'">
-                <h1 class="text-3xl font-bold">Page Connexion</h1>
+            <div v-else-if="page === 'connexion'" class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
+                <h2 class="text-2xl font-black mb-6 text-slate-800">Connexion</h2>
+                
+                <form @submit.prevent="login" class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Email</label>
+                        <input type="email" v-model="loginForm.email" required 
+                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Mot de passe</label>
+                        <input type="password" v-model="loginForm.password" required 
+                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+
+                    <p v-if="message" class="text-red-500 text-xs font-bold mt-2 ml-1">{{ message }}</p>
+
+                    <button type="submit" class="w-full bg-black text-white font-black py-4 rounded-2xl hover:bg-slate-800 transition shadow-lg mt-4">
+                        Se connecter
+                    </button>
+                </form>
+                
+                <p class="text-center mt-6 text-sm text-slate-500">
+                    Pas encore de compte ? 
+                    <button @click="page = 'inscription'" class="text-emerald-600 font-bold">S'inscrire</button>
+                </p>
             </div>
 
             <div v-else-if="page === 'vendre'">
