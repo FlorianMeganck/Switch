@@ -13,30 +13,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category_id = $_POST['category_id'];
     $new_cat = trim($_POST['new_category_name']);
 
-    // --- GESTION DE L'IMAGE ---
-    $image_name = null; // Par défaut, pas d'image
+    // --- GESTION DE L'IMAGE (SÉCURISÉE) ---
+    $image_name = null; 
 
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === 0) {
-        $upload_dir = 'uploads/';
+        $file = $_FILES['product_image'];
         
-        // On crée un nom unique pour éviter que deux photos "image.jpg" s'écrasent
-        $extension = pathinfo($_FILES['product_image']['name'], PATHINFO_EXTENSION);
+        // 1. Paramètres de sécurité
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'webp'];
+        $allowed_mimes = ['image/jpeg', 'image/png', 'image/webp'];
+        $max_size = 2 * 1024 * 1024; // 2 Mo
+
+        // 2. Vérification de l'extension
+        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+        // 3. Vérification du MIME Type (le fameux "mimptimp")
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime_type = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+
+        // 4. Test de validation
+        if (!in_array($extension, $allowed_extensions)) {
+            die("Erreur : Extension ." . $extension . " non autorisée.");
+        }
+        if (!in_array($mime_type, $allowed_mimes)) {
+            die("Erreur : Le fichier n'est pas une image valide (MIME non reconnu).");
+        }
+        if ($file['size'] > $max_size) {
+            die("Erreur : L'image est trop lourde (max 2Mo).");
+        }
+
+        // 5. Si tout est OK, upload
+        $upload_dir = 'uploads/';
         $image_name = uniqid() . '.' . $extension; 
         $target_path = $upload_dir . $image_name;
 
-        // On déplace le fichier du dossier temporaire vers ton dossier uploads
-        move_uploaded_file($_FILES['product_image']['tmp_name'], $target_path);
+        if (!move_uploaded_file($file['tmp_name'], $target_path)) {
+            die("Erreur lors du transfert de l'image.");
+        }
     }
+    // --- FIN GESTION DE L'IMAGE ---
 
     try {
-        // Logique catégorie (que tu as déjà)
+        // Logique catégorie
         if (!empty($new_cat)) {
             $stmtCat = $connexion->prepare("INSERT INTO categorys (name) VALUES (:name)");
             $stmtCat->execute([':name' => $new_cat]);
             $category_id = $connexion->lastInsertId();
         }
 
-        // INSERTION DU PRODUIT (On ajoute la colonne 'image' ici)
+        // INSERTION DU PRODUIT
         $sql = "INSERT INTO products (name, description, price, `condition`, seller_id, category_id, is_sold, image) 
                 VALUES (:n, :d, :p, :co, :s, :ca, 'non', :img)";
         
@@ -48,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':co' => $condition,
             ':s'  => $seller_id,
             ':ca' => $category_id,
-            ':img' => $image_name // On enregistre le nom du fichier
+            ':img' => $image_name 
         ]);
 
         header('Location: index.php?success=added');

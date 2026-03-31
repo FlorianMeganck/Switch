@@ -58,7 +58,7 @@ include 'includes/header.php';
 
         <div>
             <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Photo de l'objet</label>
-            <input type="file" name="product_image" accept="image/*"
+            <input type="file" name="product_image" accept=".jpg,.jpeg,.png,.webp" class="...">
                    class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
         </div>
         
