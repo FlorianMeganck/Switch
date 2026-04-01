@@ -1,7 +1,7 @@
 <?php
 session_start();
 header('Content-Type: application/json');
-require_once 'db_access.php';
+require_once __DIR__ . '/config/db_access.php';
 
 // Sécurité : Vérifier si l'étudiant est connecté
 if (!isset($_SESSION['user_id'])) {

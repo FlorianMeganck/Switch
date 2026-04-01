@@ -1,5 +1,5 @@
 <?php
-require_once 'db_access.php';
+require_once __DIR__ . '/config/db_access.php';
 try {
     $query = $connexion->query("SELECT id, name FROM categorys ORDER BY name ASC");
     echo json_encode($query->fetchAll(PDO::FETCH_ASSOC));

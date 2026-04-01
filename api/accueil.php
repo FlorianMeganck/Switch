@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 
 // Connexion à la base de données (située dans le même dossier api/)
-require_once 'db_access.php';
+require_once __DIR__ . '/config/db_access.php';
 
 try {
     // MODIFICATION : On ajoute seller_id dans la liste pour que Vue.js sache qui a posté l'objet

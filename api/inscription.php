@@ -3,7 +3,7 @@ session_start();
 header('Content-Type: application/json');
 
 // 1. On utilise le chemin relatif direct
-require_once 'db_access.php'; 
+require_once __DIR__ . '/config/db_access.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['username'] ?? null;
