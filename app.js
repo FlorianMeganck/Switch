@@ -198,4 +198,3 @@ createApp({
         this.fetchCategories();
     }
 }).mount('#app')
-
