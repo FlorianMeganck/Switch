@@ -185,12 +185,17 @@ createApp({
             }
         },
 
-        // --- PETIT BOUT DE CODE AJOUTÉ ICI ---
         getMyLastProduct() {
             // Cherche dans la liste globale le premier produit qui t'appartient
             return this.produits.find(p => p.seller_id == this.user.id);
+        },
+
+        getMyProductsCount() {
+            // On filtre la liste pour ne garder que tes produits et on compte la longueur
+            return this.produits.filter(p => p.seller_id == this.user.id).length;
         }
     },
+
     mounted() {
         // Initialisation au chargement de la page
         this.checkSession();
