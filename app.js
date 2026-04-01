@@ -193,6 +193,28 @@ createApp({
         getMyProductsCount() {
             // On filtre la liste pour ne garder que tes produits et on compte la longueur
             return this.produits.filter(p => p.seller_id == this.user.id).length;
+        },
+
+        async supprimerProduit(id) {
+            // Une petite sécurité pour éviter les clics accidentels
+            if (!confirm("Es-tu sûr de vouloir supprimer cet article ?")) return;
+
+            const formData = new FormData();
+            formData.append('product_id', id);
+
+            try {
+                const response = await fetch('api/suppression.php', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if (data.success) {
+                    // On rafraîchit la liste pour que le compteur et l'annonce disparaissent
+                    this.fetchProduits(); 
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error("Erreur suppression:", err);
+            }
         }
     },
 

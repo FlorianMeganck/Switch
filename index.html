@@ -327,6 +327,9 @@
                                     Modifier
                                 </button>
                                 <p v-else class="text-xs text-slate-400">Aucune annonce à modifier</p>
+                                <button v-if="getMyLastProduct()" @click="supprimerProduit(getMyLastProduct().id)" class="text-sm font-bold text-red-500 hover:underline">
+                                    Supprimer
+                                </button>
                             </div>
                         </div>
                     </div>
