@@ -1,33 +1,25 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- Encodage UTF-8 -->
     <meta charset="UTF-8">
-    <!-- Design responsive pour tous les écrans -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Titre de la page -->
     <title>SWITCH - La plateforme d'échange</title>
 
-    <!-- Tailwind CSS pour le style -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Vue.js 3 pour la réactivité -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 
 <body class="bg-slate-50 text-slate-900 font-sans">
 
-    <!-- Conteneur principal Vue -->
     <div id="app">
 
-        <!-- NAVBAR -->
         <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
             <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
                 
                 <div class="flex gap-8 items-center">
-                    <!-- Logo Switch, clique pour revenir à l'accueil -->
+                    <!-- Logo Switch -->
                     <h1 @click="page = 'accueil'" class="text-xl font-bold cursor-pointer uppercase tracking-wider">Switch</h1>
                     
-                    <!-- Menu de navigation -->
                     <div class="flex gap-6">
                         <button @click="page = 'accueil'" class="text-sm font-semibold hover:text-emerald-600">Accueil</button>
                         <button @click="page = 'troc'" class="text-sm font-semibold hover:text-emerald-600">Troc</button>
@@ -37,11 +29,9 @@
 
                 <!-- Section connexion/profil -->
                 <div>
-                    <!-- Bouton connexion si pas connecté -->
                     <button v-if="!user" @click="page = 'connexion'" class="bg-black text-white px-5 py-2 rounded-xl text-sm font-bold">
                         Connexion
                     </button>
-                    <!-- Profil si connecté -->
                     <button v-else @click="page = 'profil'" class="font-bold text-emerald-600 flex items-center gap-2">
                         <span>{{ user.username }}</span>
                         <span class="text-lg">👤</span>
@@ -51,13 +41,10 @@
             </div>
         </nav>
 
-        <!-- MAIN -->
         <main class="max-w-6xl mx-auto px-6 py-10">
 
-            <!-- PAGE ACCUEIL -->
             <div v-if="page === 'accueil'" class="space-y-16">
 
-                <!-- BANNIERE PRINCIPALE -->
                 <section class="bg-slate-100 rounded-3xl p-10 flex flex-col md:flex-row justify-between items-center gap-10">
                     <div class="max-w-md">
                         <h1 class="text-4xl font-bold mb-4">Achète et vends facilement 👕</h1>
@@ -70,7 +57,6 @@
                     <img src="https://picsum.photos/600/400" class="rounded-xl shadow hidden md:block">
                 </section>
 
-                <!-- DERNIERS OBJETS AJOUTÉS -->
                 <section>
                     <h2 class="text-2xl font-bold mb-6">🔥 Derniers objets ajoutés</h2>
 
@@ -79,7 +65,6 @@
                             
                             <!-- Image du produit si elle existe -->
                             <img v-if="produit.image" :src="'uploads/' + produit.image" class="rounded-xl mb-3 w-full h-40 object-cover">
-                            <!-- Image par défaut -->
                             <div v-else class="rounded-xl mb-3 w-full h-40 bg-slate-200 flex items-center justify-center text-2xl">
                                 📦
                             </div>
@@ -97,7 +82,6 @@
                     </div>
                 </section>
 
-                <!-- COMMENT FONCTIONNE SWITCH -->
                 <section>
                     <h2 class="text-2xl font-bold text-center mb-10">Comment fonctionne SWITCH ?</h2>
                     <div class="grid md:grid-cols-3 gap-8 text-center">
@@ -120,7 +104,6 @@
                 </section>
             </div>
 
-            <!-- PAGE CONNEXION -->
             <div v-else-if="page === 'connexion'" class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
                 <h2 class="text-2xl font-black mb-6 text-slate-800">Connexion</h2>
                 
@@ -150,7 +133,6 @@
                 </p>
             </div>
 
-            <!-- PAGE INSCRIPTION -->
             <div v-else-if="page === 'inscription'" class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
                 <h2 class="text-2xl font-black mb-6 text-slate-800">Créer un compte</h2>
                 
@@ -186,7 +168,6 @@
                 </p>
             </div>
 
-            <!-- PAGE VENDRE -->
             <div v-else-if="page === 'vendre'" class="max-w-xl mx-auto bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
                 <h2 class="text-2xl font-black mb-6 text-slate-800">Publier une annonce</h2>
 
@@ -256,22 +237,18 @@
                 </form>
             </div>
 
-            <!-- PAGE EDITER -->
             <div v-else-if="page === 'editer'" class="max-w-xl mx-auto bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
                 <h2 class="text-2xl font-black mb-6 text-slate-800">Modifier l'annonce</h2>                <form @submit.prevent="modifierProduit" class="space-y-4">
-                    <!-- Affichage image actuelle si existe -->
                     <div v-if="editForm.current_image" class="mb-4">
                         <label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Image actuelle</label>
                         <img :src="'uploads/' + editForm.current_image" class="w-32 h-32 object-cover rounded-xl border">
                     </div>
 
-                    <!-- Nom de l'objet -->
                     <div>
                         <label class="block text-[10px] font-black uppercase text-slate-400 mb-1">Nom de l'objet</label>
                         <input type="text" v-model="editForm.name" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none">
                     </div>
 
-                    <!-- Catégorie existante ou nouvelle -->
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-4">
                         <select v-model="editForm.category_id" class="w-full p-4 bg-white border border-slate-200 rounded-xl">
                             <option value="">-- Catégorie --</option>
@@ -280,16 +257,13 @@
                         <input type="text" v-model="editForm.new_category_name" placeholder="Ou nouvelle catégorie..." class="w-full p-4 bg-white border border-slate-200 rounded-xl">
                     </div>
 
-                    <!-- Changer photo optionnel -->
                     <div>
                         <label class="block text-[10px] font-black uppercase text-slate-400 mb-1">Changer la photo (optionnel)</label>
                         <input type="file" @change="handleFileUpload" accept=".jpg,.jpeg,.png,.webp" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl">
                     </div>
 
-                    <!-- Description -->
                     <textarea v-model="editForm.description" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl h-32"></textarea>
 
-                    <!-- Prix et état -->
                     <div class="grid grid-cols-2 gap-4">
                         <input type="number" step="0.01" v-model="editForm.price" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl">
                         <select v-model="editForm.condition" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl">
@@ -299,7 +273,6 @@
                         </select>
                     </div>
 
-                    <!-- Boutons enregistrer/annuler -->
                     <button type="submit" class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl shadow-lg mt-4">
                         Enregistrer les modifications
                     </button>
@@ -307,28 +280,22 @@
                 </form>
             </div>
 
-            <!-- PAGE TROC -->
             <div v-else-if="page === 'troc'">
                 <h1 class="text-3xl font-bold">Tous les objets</h1>
-                <!-- Ici tu pourrais ajouter une boucle pour afficher tous les produits -->
             </div>
 
-            <!-- PAGE PROFIL -->
             <div v-else-if="page === 'profil'" class="max-w-2xl mx-auto mt-10 px-6">
 
                 <div v-if="user" class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
-                    <!-- Bannière profil -->
                     <div class="bg-emerald-600 h-32"></div>
 
                     <div class="px-8 pb-8">
-                        <!-- Avatar -->
                         <div class="relative">
                             <div class="absolute -top-12 left-0 w-24 h-24 bg-slate-200 rounded-2xl border-4 border-white flex items-center justify-center text-3xl font-black text-slate-400">
                                 {{ user.username.charAt(0).toUpperCase() }}
                             </div>
                         </div>
 
-                        <!-- Nom et bouton déconnexion -->
                         <div class="mt-16 flex justify-between items-end">
                             <div>
                                 <h2 class="text-3xl font-black text-slate-800">{{ user.username }}</h2>
@@ -337,7 +304,6 @@
                             <button @click="logout" class="text-sm font-bold text-red-500 hover:underline mb-1">Se déconnecter</button>
                         </div>
 
-                        <!-- Statistiques -->
                         <div class="grid grid-cols-2 gap-4 mt-8">
                             <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
                                 <span class="block text-[10px] font-black uppercase text-slate-400 mb-1">Mon Solde</span>
@@ -349,7 +315,6 @@
                             </div>
                         </div>
 
-                        <!-- Mes annonces -->
                         <div class="mt-10">
                             <h3 class="text-xl font-bold text-slate-800 mb-4">Mes annonces</h3>
                             <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
@@ -369,14 +334,12 @@
 
         </main>
 
-        <!-- FOOTER -->
         <footer class="mt-20 py-10 text-center text-slate-400 text-xs font-bold uppercase tracking-widest">
             &copy; 2026 – Projet Switch
         </footer>
 
     </div>
 
-    <!-- Script principal -->
     <script src="app.js"></script>
 
 </body>
