@@ -11,5 +11,3 @@ Header always set Content-Security-Policy "default-src 'unsafe-inline' 'unsafe-e
     worker-src 'self' blob:;"
 
 Header set Acess-Control-Allow-Origin: *
-
-php_flag display_errors On
