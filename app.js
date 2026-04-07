@@ -4,16 +4,14 @@ createApp({
     data() {
         return {
             page: 'accueil',
-            user: null,
-            message: '',
+            currentUser: null, // Uniformisé avec le style prof
+            error: '',         // Uniformisé avec le style prof
             produits: [],
-            categories: [], // Liste des catégories pour le formulaire
+            categories: [], 
             
-            // Formulaires
-            loginForm: { email: '', password: '' },
-            registerForm: { username: '', email: '', password: '' },
+            login_form: { email: '', password: '', remember: false },
+            register_form: { username: '', email: '', password: '' },
             
-            // Formulaire de vente (calqué sur ton ancien PHP)
             selectedFile: null,
             vendreForm: {
                 name: '',
@@ -21,10 +19,9 @@ createApp({
                 new_category_name: '',
                 description: '',
                 price: '',
-                condition: 'Good' // Valeur par défaut
+                condition: 'Good'
             },
 
-            // --- AJOUT DATA ÉDITION ---
             editForm: {
                 id: null,
                 name: '',
@@ -33,7 +30,7 @@ createApp({
                 description: '',
                 price: '',
                 condition: '',
-                current_image: null // Pour afficher l'image actuelle
+                current_image: null 
             }
         }
     },
@@ -41,13 +38,10 @@ createApp({
         // --- SESSIONS & AUTHENTIFICATION ---
         async checkSession() {
             try {
-                // Actuellement, on vérifie juste la session PHP.
-                // TODO : Intégrer ici la vérification du COOKIE "Remember Me" 
-                // généré par le backend si l'utilisateur avait coché la case.
                 const response = await fetch('api/check_session.php');
                 const data = await response.json();
                 if (data.connected) {
-                    this.user = data.user;
+                    this.currentUser = data.user;
                 }
             } catch (err) {
                 console.error("Erreur session:", err);
@@ -55,54 +49,60 @@ createApp({
         },
 
         async login() {
-            /* CHANGEMENT À VENIR : Simplification du processus de connexion.
-            Au lieu d'utiliser FormData, je vais passer à l'envoi 
-            en JSON comme dans l'exemple du cours.
-            Cela va permettre d'utiliser REST et facilite la lecture du body en PHP */
-            const formData = new FormData();
-            formData.append('email', this.loginForm.email);
-            formData.append('password', this.loginForm.password);
-            // TODO : Ajouter loginForm.remember pour la gestion du cookie persistant de 30 jours.
+            if (!this.login_form.email || !this.login_form.password) {
+                this.error = 'Veuillez remplir tous les champs.';
+                return;
+            }
+            try {
+                // Correction de la syntaxe fetch et passage au JSON
+                const response = await fetch('api/connexion.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(this.login_form)
+                });
+                const data = await response.json();
 
-            const response = await fetch('api/connexion.php', { method: 'POST', body: formData });
-            const data = await response.json();
-
-            if (data.success) {
-                this.user = data.user;
-                this.page = 'accueil';
-                this.message = '';
-            } else {
-                this.message = data.message;
+                if (data.success) {
+                    this.currentUser = data.user;
+                    this.login_form = { email: '', password: '', remember: false };
+                    this.page = 'accueil';
+                    this.error = '';
+                } else {
+                    this.error = data.message;
+                }
+            } catch (err) {
+                this.error = "Erreur de connexion au serveur";
             }
         },
 
         async register() {
-            // Même logique de simplification prévue : passage au format JSON
-            // TODO : l'API avec les standards REST.
-            const formData = new FormData();
-            formData.append('username', this.registerForm.username);
-            formData.append('email', this.registerForm.email);
-            formData.append('password', this.registerForm.password);
+            try {
+                const response = await fetch('api/inscription.php', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(this.register_form) 
+                });
+                const data = await response.json();
 
-            const response = await fetch('api/inscription.php', { method: 'POST', body: formData });
-            const data = await response.json();
-
-            if (data.success) {
-                this.user = data.user;
-                this.page = 'accueil';
-                this.message = '';
-            } else {
-                this.message = data.message;
+                if (data.success) {
+                    this.currentUser = data.user;
+                    this.register_form = { username: '', email: '', password: '' };
+                    this.page = 'accueil';
+                    this.error = '';
+                } else {
+                    this.error = data.message;
+                }
+            } catch (err) {
+                this.error = "Erreur lors de l'inscription.";
             }
         },
 
         async logout() {
-            // NOTE : À la déconnexion, il faudra aussi penser à supprimer 
-            // le cookie "Remember Me" côté PHP.
             await fetch('api/deconnexion.php');
-            this.user = null;
+            this.currentUser = null;
             this.page = 'accueil';
         },
+
         // --- GESTION DES PRODUITS & CATÉGORIES ---
         async fetchProduits() {
             try {
@@ -123,17 +123,14 @@ createApp({
         },
 
         handleFileUpload(event) {
-            // Capture le fichier image sélectionné
             this.selectedFile = event.target.files[0];
         },
 
         async vendreProduit() {
             const formData = new FormData();
-            // On ajoute tous les champs du formulaire de vente
             for (let key in this.vendreForm) {
                 formData.append(key, this.vendreForm[key]);
             }
-            // On ajoute l'image si elle existe
             if (this.selectedFile) {
                 formData.append('product_image', this.selectedFile);
             }
@@ -143,30 +140,25 @@ createApp({
                 const data = await response.json();
 
                 if (data.success) {
-                    alert("Annonce publiée !");
                     this.page = 'accueil';
-                    this.fetchProduits(); // Rafraîchit la liste d'accueil
-                    // Réinitialisation du formulaire
+                    this.fetchProduits();
                     this.vendreForm = { name: '', category_id: '', new_category_name: '', description: '', price: '', condition: 'Good' };
                 } else {
-                    alert(data.message);
+                    this.error = data.message;
                 }
             } catch (err) {
-                alert("Erreur lors de l'envoi.");
+                this.error = "Erreur lors de l'envoi.";
             }
         },
 
-        // --- AJOUT MÉTHODES ÉDITION ---
         prepareEdit(produit) {
-            // On pré-remplit le formulaire avec les données du produit sélectionné
             this.editForm = { ...produit }; 
             this.editForm.current_image = produit.image;
-            this.page = 'editer'; // Bascule sur la page d'édition
+            this.page = 'editer'; 
         },
 
         async modifierProduit() {
             const formData = new FormData();
-            // On ajoute l'ID et les champs texte requis par edition.php
             formData.append('product_id', this.editForm.id);
             formData.append('name', this.editForm.name);
             formData.append('category_id', this.editForm.category_id);
@@ -175,7 +167,6 @@ createApp({
             formData.append('price', this.editForm.price);
             formData.append('condition', this.editForm.condition);
 
-            // Si une nouvelle photo est choisie
             if (this.selectedFile) {
                 formData.append('product_image', this.selectedFile);
             }
@@ -185,29 +176,27 @@ createApp({
                 const data = await response.json();
 
                 if (data.success) {
-                    alert("Modification réussie !");
-                    this.page = 'profil'; // Retour au profil
-                    this.fetchProduits(); // Actualise les données
+                    this.page = 'profil'; 
+                    this.fetchProduits(); 
                 } else {
-                    alert(data.message);
+                    this.error = data.message;
                 }
             } catch (err) {
-                alert("Erreur lors de la modification.");
+                this.error = "Erreur lors de la modification.";
             }
         },
 
         getMyLastProduct() {
-            // Cherche dans la liste globale le premier produit qui t'appartient
-            return this.produits.find(p => p.seller_id == this.user.id);
+            if (!this.currentUser) return null;
+            return this.produits.find(p => p.seller_id == this.currentUser.id);
         },
 
         getMyProductsCount() {
-            // On filtre la liste pour ne garder que tes produits et on compte la longueur
-            return this.produits.filter(p => p.seller_id == this.user.id).length;
+            if (!this.currentUser) return 0;
+            return this.produits.filter(p => p.seller_id == this.currentUser.id).length;
         },
 
         async supprimerProduit(id) {
-            // Une petite sécurité pour éviter les clics accidentels
             if (!confirm("Es-tu sûr de vouloir supprimer cet article ?")) return;
 
             const formData = new FormData();
@@ -218,10 +207,9 @@ createApp({
                 const data = await response.json();
 
                 if (data.success) {
-                    // On rafraîchit la liste pour que le compteur et l'annonce disparaissent
                     this.fetchProduits(); 
                 } else {
-                    alert(data.message);
+                    this.error = data.message;
                 }
             } catch (err) {
                 console.error("Erreur suppression:", err);
@@ -230,7 +218,6 @@ createApp({
     },
 
     mounted() {
-        // Initialisation au chargement de la page
         this.checkSession();
         this.fetchProduits();
         this.fetchCategories();

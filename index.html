@@ -23,17 +23,17 @@
                     <div class="flex gap-6">
                         <button @click="page = 'accueil'" class="text-sm font-semibold hover:text-emerald-600">Accueil</button>
                         <button @click="page = 'troc'" class="text-sm font-semibold hover:text-emerald-600">Troc</button>
-                        <button v-if="user" @click="page = 'vendre'" :class="page === 'vendre' ? 'text-emerald-600' : ''" class="text-sm font-semibold hover:text-emerald-600">Vendre</button>
+                        <button v-if="currentUser" @click="page = 'vendre'" :class="page === 'vendre' ? 'text-emerald-600' : ''" class="text-sm font-semibold hover:text-emerald-600">Vendre</button>
                     </div>
                 </div>
 
                 <!-- Section connexion/profil -->
                 <div>
-                    <button v-if="!user" @click="page = 'connexion'" class="bg-black text-white px-5 py-2 rounded-xl text-sm font-bold">
+                    <button v-if="!currentUser" @click="page = 'connexion'" class="bg-black text-white px-5 py-2 rounded-xl text-sm font-bold">
                         Connexion
                     </button>
                     <button v-else @click="page = 'profil'" class="font-bold text-emerald-600 flex items-center gap-2">
-                        <span>{{ user.username }}</span>
+                        <span>{{ currentUser.username }}</span>
                         <span class="text-lg">👤</span>
                     </button>
                 </div>
@@ -110,17 +110,22 @@
                 <form @submit.prevent="login" class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Email</label>
-                        <input type="email" v-model="loginForm.email" required 
+                        <input type="email" v-model="login_form.email" required 
                             class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
                     </div>
 
                     <div>
                         <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Mot de passe</label>
-                        <input type="password" v-model="loginForm.password" required 
+                        <input type="password" v-model="login_form.password" required 
                             class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
                     </div>
 
-                    <p v-if="message" class="text-red-500 text-xs font-bold mt-2 ml-1">{{ message }}</p>
+                    <div class="flex items-center gap-2 mt-4 ml-1">
+                        <input type="checkbox" v-model="login_form.remember" id="remember" class="w-4 h-4 accent-emerald-600 cursor-pointer">
+                        <label for="remember" class="text-[10px] font-black text-slate-400 cursor-pointer uppercase">Se souvenir de moi</label>
+                    </div>
+
+                    <p v-if="error" class="text-red-500 text-xs font-bold mt-2 ml-1">{{ error }}</p>
 
                     <button type="submit" class="w-full bg-black text-white font-black py-4 rounded-2xl hover:bg-slate-800 transition shadow-lg mt-4">
                         Se connecter
@@ -136,31 +141,31 @@
             <div v-else-if="page === 'inscription'" class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
                 <h2 class="text-2xl font-black mb-6 text-slate-800">Créer un compte</h2>
                 
-                <form @submit.prevent="register" class="space-y-4">
-                    <div>
-                        <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Nom d'utilisateur</label>
-                        <input type="text" v-model="registerForm.username" required 
-                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                    </div>
+            <form @submit.prevent="register" class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Nom d'utilisateur</label>
+                    <input type="text" v-model="register_form.username" required 
+                        class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
 
-                    <div>
-                        <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Email</label>
-                        <input type="email" v-model="registerForm.email" required 
-                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                    </div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Email</label>
+                    <input type="email" v-model="register_form.email" required 
+                        class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
 
-                    <div>
-                        <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Mot de passe</label>
-                        <input type="password" v-model="registerForm.password" required 
-                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                    </div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Mot de passe</label>
+                    <input type="password" v-model="register_form.password" required 
+                        class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
 
-                    <p v-if="message" class="text-red-500 text-xs font-bold mt-2 ml-1">{{ message }}</p>
+                <p v-if="error" class="text-red-500 text-xs font-bold mt-2 ml-1">{{ error }}</p>
 
-                    <button type="submit" class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl hover:bg-emerald-700 transition shadow-lg mt-4">
-                        S'inscrire
-                    </button>
-                </form>
+                <button type="submit" class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl hover:bg-emerald-700 transition shadow-lg mt-4">
+                    S'inscrire
+                </button>
+            </form>
 
                 <p class="text-center mt-6 text-sm text-slate-500">
                     Déjà un compte ? 
@@ -286,19 +291,19 @@
 
             <div v-else-if="page === 'profil'" class="max-w-2xl mx-auto mt-10 px-6">
 
-                <div v-if="user" class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+                <div v-if="currentUser" class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
                     <div class="bg-emerald-600 h-32"></div>
 
                     <div class="px-8 pb-8">
                         <div class="relative">
                             <div class="absolute -top-12 left-0 w-24 h-24 bg-slate-200 rounded-2xl border-4 border-white flex items-center justify-center text-3xl font-black text-slate-400">
-                                {{ user.username.charAt(0).toUpperCase() }}
+                                {{ currentUser.username.charAt(0).toUpperCase() }}
                             </div>
                         </div>
 
                         <div class="mt-16 flex justify-between items-end">
                             <div>
-                                <h2 class="text-3xl font-black text-slate-800">{{ user.username }}</h2>
+                                <h2 class="text-3xl font-black text-slate-800">{{ currentUser.username }}</h2>
                                 <p class="text-slate-500">Membre de la communauté Switch</p>
                             </div>
                             <button @click="logout" class="text-sm font-bold text-red-500 hover:underline mb-1">Se déconnecter</button>
