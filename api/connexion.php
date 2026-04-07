@@ -34,37 +34,38 @@ try {
         $_SESSION['username'] = $user['username'];
 
         // --- GESTION DU COOKIE "REMEMBER ME" ---
-        if ($remember) {
-            // On calcule la durée sur 30 jours
-            $duree = time() + (30 * 24 * 60 * 60); 
+    if ($remember) {
+                $duree = time() + (30 * 24 * 60 * 60); 
+                setcookie('remember_user', $user['id'], [
+                    'expires' => $duree,
+                    'path' => '/',
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]);
+            } else {
+                setcookie('remember_user', '', time() - 3600, '/');
+            }
 
-            // On stocke l'ID de l'utilisateur dans un cookie sécurisé
-            setcookie('remember_user', $user['id'], [
-                'expires' => $duree,
-                'path' => '/',
-                'httponly' => true, // Sécurité contre le vol de cookie en JS
-                'samesite' => 'Lax'
+            // 6. Succès : ce qui est attendu
+            echo json_encode([
+                'success' => true,
+                'user' => [
+                    'username' => $user['username'],
+                    'id' => $user['id']
+                ]
             ]);
+            http_response_code(200);
+
+        } // <--- C'EST CETTE ACCOLADE QUI MANQUE (ferme le if de la ligne 31)
+
+        else {
+            // échec de la connexion : identifiants incorrects
+            echo json_encode(['success' => false, 'message' => 'Email ou mot de passe incorrect.']);
+            http_response_code(401);
         }
 
-        // 6. Succès : ce qui est attendu
-        echo json_encode([
-            'success' => true,
-            'user' => [
-                'username' => $user['username'],
-                'id' => $user['id']
-            ]
-        ]);
-        http_response_code(200);
-
-    } else {
-        // échec de la connexion : identifiants incorrects
-        echo json_encode(['success' => false, 'message' => 'Email ou mot de passe incorrect.']);
-        http_response_code(401);
-    }
-
-} catch (PDOException $e) {
-    //Erreur de la DB
+    } catch (PDOException $e) {
+        //Erreur de la DB
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Une erreur technique est survenue.']);
 }

@@ -8,7 +8,7 @@ $response = ['connected' => false, 'user' => null];
 
 if (isset($_SESSION['user_id'])) {
     // On renvoie les infos si l'étudiant est déjà connecté
-    echo json_encode([
+    $response = [
         'connected' => true,
         'user' => [
             'username' => $_SESSION['username'], 
@@ -16,7 +16,6 @@ if (isset($_SESSION['user_id'])) {
         ]
     ];
 }
-
 else if (isset($_COOKIE['remember_user'])) {
     $user_id = $_COOKIE['remember_user']; // Dans connexion.php, on a stocké l'ID dans ce cookie
 
@@ -44,6 +43,6 @@ else if (isset($_COOKIE['remember_user'])) {
     }
 }
 
-// 4. Envoi de la réponse à l'app.js
+// 4. Envoi de la réponse à l'app.js (Une seule fois à la fin, c'est plus propre)
 echo json_encode($response);
 exit;
