@@ -15,12 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $cond = $_POST['condition'];
     $cat = $_POST['category_id'];
-    $new_cat = trim($_POST['new_category_name'] ?? '');
+    $new_cat = trim($_POST['new_categories_name'] ?? '');
 
     try {
         // 1. Gestion d'une nouvelle catégorie
         if (!empty($new_cat)) {
-            $stmtCat = $connexion->prepare("INSERT INTO categorys (name) VALUES (:name)");
+            $stmtCat = $connexion->prepare("INSERT INTO categories (name) VALUES (:name)");
             $stmtCat->execute([':name' => $new_cat]);
             $cat = $connexion->lastInsertId();
         }

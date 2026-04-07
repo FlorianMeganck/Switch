@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $condition = $_POST['condition'];
     $seller_id = $_SESSION['user_id'];
     $category_id = $_POST['category_id'] ?? null;
-    $new_cat = trim($_POST['new_category_name'] ?? '');
+    $new_cat = trim($_POST['new_categories_name'] ?? '');
 
     $image_name = null; 
 
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if (!empty($new_cat)) {
-            $stmtCat = $connexion->prepare("INSERT INTO categorys (name) VALUES (:name)");
+            $stmtCat = $connexion->prepare("INSERT INTO categories (name) VALUES (:name)");
             $stmtCat->execute([':name' => $new_cat]);
             $category_id = $connexion->lastInsertId();
         }
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $statement = $connexion->prepare($sql);
         $statement->execute([
             ':n' => $name, ':d' => $description, ':p' => $price, 
-            ':co' => $condition, ':s' => $seller_id, ':ca' => $category_id, ':img' => $image_name 
+            ':co' => $condition, ':s' => $seller_id, ':ca' => $categories_id, ':img' => $image_name 
         ]);
 
         echo json_encode(['success' => true, 'message' => 'Produit ajouté avec succès !']);
