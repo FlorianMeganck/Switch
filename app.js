@@ -41,6 +41,9 @@ createApp({
         // --- SESSIONS & AUTHENTIFICATION ---
         async checkSession() {
             try {
+                // Actuellement, on vérifie juste la session PHP.
+                // TODO : Intégrer ici la vérification du COOKIE "Remember Me" 
+                // généré par le backend si l'utilisateur avait coché la case.
                 const response = await fetch('api/check_session.php');
                 const data = await response.json();
                 if (data.connected) {
@@ -52,9 +55,14 @@ createApp({
         },
 
         async login() {
+            /* CHANGEMENT À VENIR : Simplification du processus de connexion.
+            Au lieu d'utiliser FormData, je vais passer à l'envoi 
+            en JSON comme dans l'exemple du cours.
+            Cela va permettre d'utiliser REST et facilite la lecture du body en PHP */
             const formData = new FormData();
             formData.append('email', this.loginForm.email);
             formData.append('password', this.loginForm.password);
+            // TODO : Ajouter loginForm.remember pour la gestion du cookie persistant de 30 jours.
 
             const response = await fetch('api/connexion.php', { method: 'POST', body: formData });
             const data = await response.json();
@@ -69,6 +77,8 @@ createApp({
         },
 
         async register() {
+            // Même logique de simplification prévue : passage au format JSON
+            // TODO : l'API avec les standards REST.
             const formData = new FormData();
             formData.append('username', this.registerForm.username);
             formData.append('email', this.registerForm.email);
@@ -87,11 +97,12 @@ createApp({
         },
 
         async logout() {
+            // NOTE : À la déconnexion, il faudra aussi penser à supprimer 
+            // le cookie "Remember Me" côté PHP.
             await fetch('api/deconnexion.php');
             this.user = null;
             this.page = 'accueil';
         },
-
         // --- GESTION DES PRODUITS & CATÉGORIES ---
         async fetchProduits() {
             try {
