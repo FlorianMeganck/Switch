@@ -7,7 +7,7 @@ require_once __DIR__ . '/config/db_access.php'; //on vérifie dans la DB le cont
 $response = ['connected' => false, 'user' => null];
 
 if (isset($_SESSION['user_id'])) {
-    // On renvoie les infos si l'étudiant est déjà connecté
+    // On renvoie les infos si l'utilisateur est déjà connecté
     $response = [
         'connected' => true,
         'user' => [
@@ -43,6 +43,6 @@ else if (isset($_COOKIE['remember_user'])) {
     }
 }
 
-// 4. Envoi de la réponse à l'app.js (Une seule fois à la fin, c'est plus propre)
+// Envoi de la réponse à l'app.js
 echo json_encode($response);
 exit;

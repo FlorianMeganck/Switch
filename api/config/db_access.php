@@ -7,7 +7,7 @@ define('BASE', 'ebus2_projet05_siii57');
 // le seul endroit où je vais dire le type de base de données SQL que j'utilise
 $dsn = 'mysql:host=' . SERVER . ';dbname=' . BASE;
 
-    // créer la connexion
+// créer la connexion
 try {
     $connexion = new PDO($dsn, USER, PASSWD);
 } catch (PDOException $e) {

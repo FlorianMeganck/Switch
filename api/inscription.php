@@ -2,13 +2,15 @@
 session_start();
 header('Content-Type: application/json');
 
-// 1. On utilise le chemin relatif direct
 require_once __DIR__ . '/config/db_access.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user = $_POST['username'] ?? null;
-    $mail = $_POST['email'] ?? null;
-    $pass = $_POST['password'] ?? null;
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+
+    $user = $data['username'] ?? null;  //lecture du json comme dans connexion
+    $mail = $data['email'] ?? null;
+    $pass = $data['password'] ?? null;
 
     if (!$user || !$mail || !$pass) {
         echo json_encode(['success' => false, 'message' => 'Tous les champs sont obligatoires.']);
@@ -18,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hash = password_hash($pass, PASSWORD_DEFAULT);
 
     try {
-        // 2. Vérification si l'email existe déjà
+        // Vérification si l'email existe déjà
         $check = $connexion->prepare("SELECT id FROM users WHERE email = ?");
         $check->execute([$mail]);
         
@@ -27,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // 3. Insertion (Vérifie bien que tes colonnes s'appellent username, email, password_hash)
+        // Insertion
         $sql = "INSERT INTO users (username, email, password_hash) VALUES (:u, :e, :p)";
         $statement = $connexion->prepare($sql);
         $statement->execute([':u' => $user, ':e' => $mail, ':p' => $hash]);
@@ -41,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
     } catch (PDOException $e) {
-        // CORRECTION ICI : On utilise des guillemets doubles pour éviter le bug de l'apostrophe
         echo json_encode(['success' => false, 'message' => "Erreur lors de l'inscription technique."]);
     }
 }

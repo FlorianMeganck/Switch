@@ -1,7 +1,7 @@
 <?php
 session_start();
 header('Content-Type: application/json');
-// On utilise le nouveau dossier config
+
 require_once __DIR__ . '/config/db_access.php';
 
 if (!isset($_SESSION['user_id'])) {
