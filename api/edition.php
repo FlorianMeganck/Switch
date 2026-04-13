@@ -15,17 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $cond = $_POST['condition'];
     $cat = $_POST['category_id'];
-    $new_cat = trim($_POST['new_categories_name'] ?? '');
+    $new_cat = trim($_POST['new_category_name'] ?? '');
 
     try {
-        // 1. Gestion d'une nouvelle catégorie
+        // Gestion d'une nouvelle catégorie
         if (!empty($new_cat)) {
             $stmtCat = $connexion->prepare("INSERT INTO categories (name) VALUES (:name)");
             $stmtCat->execute([':name' => $new_cat]);
             $cat = $connexion->lastInsertId();
         }
 
-        // 2. Gestion de la nouvelle photo (si envoyée)
+        // Gestion de la nouvelle photo (si envoyée)
         $image_sql = "";
         $params = [':n' => $name, ':d' => $desc, ':p' => $price, ':co' => $cond, ':ca' => $cat, ':id' => $id];
 
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // 3. Mise à jour SQL
+        // Mise à jour SQL
         $sql = "UPDATE products SET name = :n, description = :d, price = :p, `condition` = :co, category_id = :ca $image_sql WHERE id = :id";
         $st = $connexion->prepare($sql);
         $st->execute($params);

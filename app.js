@@ -4,22 +4,25 @@ createApp({
     data() {
         return {
             page: 'accueil',
-            currentUser: null, // Uniformisé avec le style prof
-            error: '',         // Uniformisé avec le style prof
+            currentUser: null,
+            error: '',
+            
             produits: [],
             categories: [], 
+            selectedProduct: null, // Produit actuellement regardé
+            selectedFile: null,    // Fichier image en cours d'upload
             
+            // -- FORMULAIRES --
             login_form: { email: '', password: '', remember: false },
             register_form: { username: '', email: '', password: '' },
             
-            selectedFile: null,
             vendreForm: {
                 name: '',
                 category_id: '',
                 new_category_name: '',
                 description: '',
                 price: '',
-                condition: 'Good'
+                condition: 'Bon état'
             },
 
             editForm: {
@@ -34,8 +37,21 @@ createApp({
             }
         }
     },
+    
     methods: {
-        // --- SESSIONS & AUTHENTIFICATION ---
+        // 1. NAVIGATION & INTERFACE
+        voirProduit(produit) {
+            this.selectedProduct = produit;
+            this.page = 'detail_produit';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        revenirAuTroc() {
+            this.selectedProduct = null;
+            this.page = 'troc';
+        },
+
+        // 2. AUTHENTIFICATION & SESSION
         async checkSession() {
             try {
                 const response = await fetch('api/check_session.php');
@@ -54,7 +70,6 @@ createApp({
                 return;
             }
             try {
-                // Correction de la syntaxe fetch et passage au JSON
                 const response = await fetch('api/connexion.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -103,7 +118,7 @@ createApp({
             this.page = 'accueil';
         },
 
-        // --- GESTION DES PRODUITS & CATÉGORIES ---
+        // 3. RÉCUPÉRATION DES DONNÉES
         async fetchProduits() {
             try {
                 const response = await fetch('api/accueil.php');
@@ -122,6 +137,7 @@ createApp({
             }
         },
 
+        // 4. ACTIONS SUR LES PRODUITS
         handleFileUpload(event) {
             this.selectedFile = event.target.files[0];
         },
@@ -152,9 +168,9 @@ createApp({
         },
 
         prepareEdit(produit) {
-            this.editForm = { ...produit }; 
+            this.editForm = { ...produit };
             this.editForm.current_image = produit.image;
-            this.page = 'editer'; 
+            this.page = 'editer';
         },
 
         async modifierProduit() {
@@ -176,24 +192,14 @@ createApp({
                 const data = await response.json();
 
                 if (data.success) {
-                    this.page = 'profil'; 
-                    this.fetchProduits(); 
+                    this.page = 'profil';
+                    this.fetchProduits();
                 } else {
                     this.error = data.message;
                 }
             } catch (err) {
                 this.error = "Erreur lors de la modification.";
             }
-        },
-
-        getMyLastProduct() {
-            if (!this.currentUser) return null;
-            return this.produits.find(p => p.seller_id == this.currentUser.id);
-        },
-
-        getMyProductsCount() {
-            if (!this.currentUser) return 0;
-            return this.produits.filter(p => p.seller_id == this.currentUser.id).length;
         },
 
         async supprimerProduit(id) {
@@ -207,13 +213,24 @@ createApp({
                 const data = await response.json();
 
                 if (data.success) {
-                    this.fetchProduits(); 
+                    this.fetchProduits();
                 } else {
                     this.error = data.message;
                 }
             } catch (err) {
                 console.error("Erreur suppression:", err);
             }
+        },
+
+        // 5. FONCTIONS PROFIL
+        getMyLastProduct() {
+            if (!this.currentUser) return null;
+            return this.produits.find(p => p.seller_id == this.currentUser.id);
+        },
+
+        getMyProductsCount() {
+            if (!this.currentUser) return 0;
+            return this.produits.filter(p => p.seller_id == this.currentUser.id).length;
         }
     },
 
