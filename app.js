@@ -8,11 +8,19 @@ createApp({
             error: '',
             
             produits: [],
-            categories: [], 
-            selectedProduct: null, // Produit actuellement regardé
-            selectedFile: null,    // Fichier image en cours d'upload
-            showPassLogin: false,    // État pour la connexion
+            categories: [],
+            mesAchats : [],
+            mesAvis: [],
+            selectedProduct: null,
+            selectedFile: null,
+            showPassLogin: false,
             showPassRegister: false,
+
+            showReviewForm: false,
+            reviewForm: {
+                rating: 5,
+                comment: ''
+            },
             
             // -- FORMULAIRES --
             login_form: { email: '', password: '', remember: false },
@@ -44,13 +52,14 @@ createApp({
         // 1. NAVIGATION & INTERFACE
         voirProduit(produit) {
             this.selectedProduct = produit;
+            this.showReviewForm = false;
             this.page = 'detail_produit';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
 
         revenirAuTroc() {
             this.selectedProduct = null;
-            this.page = 'troc';
+            this.page = 'troc'; 
         },
 
         // 2. AUTHENTIFICATION & SESSION
@@ -84,6 +93,8 @@ createApp({
                     this.login_form = { email: '', password: '', remember: false };
                     this.page = 'accueil';
                     this.error = '';
+                    this.fetchMesAchats();
+                    this.fetchMesAvis(); // CORRECTION: Charger les avis à la connexion
                 } else {
                     this.error = data.message;
                 }
@@ -117,6 +128,8 @@ createApp({
         async logout() {
             await fetch('api/deconnexion.php');
             this.currentUser = null;
+            this.mesAchats = [];
+            this.mesAvis = []; // CORRECTION: Vider les avis à la déconnexion
             this.page = 'accueil';
         },
 
@@ -160,12 +173,37 @@ createApp({
                 if (data.success) {
                     this.page = 'accueil';
                     this.fetchProduits();
-                    this.vendreForm = { name: '', category_id: '', new_category_name: '', description: '', price: '', condition: 'Good' };
+                    this.vendreForm = { name: '', category_id: '', new_category_name: '', description: '', price: '', condition: 'Bon état' };
                 } else {
                     this.error = data.message;
                 }
             } catch (err) {
                 this.error = "Erreur lors de l'envoi.";
+            }
+        },
+
+        async acheterProduit(produitId) {
+            if (!confirm("Voulez-vous vraiment acheter cet article ?")) return;
+
+            try {
+                const response = await fetch('api/acheter.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product_id: produitId })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    alert("Achat réussi ! Félicitations.");
+                    this.page = 'accueil';
+                    this.fetchProduits();
+                    this.fetchMesAchats();
+                    this.checkSession(); 
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                alert("Erreur lors de la transaction.");
             }
         },
 
@@ -224,6 +262,48 @@ createApp({
             }
         },
 
+        async fetchMesAchats() {
+            try {
+                const response = await fetch('api/mes_achats.php');
+                this.mesAchats = await response.json();
+            } catch (err) {
+                console.error("Erreur lors de la récupération des achats :", err);
+            }
+        },
+
+        async envoyerAvis() {
+            if (!this.reviewForm.comment) {
+                alert("Pense à laisser un petit commentaire !");
+                return;
+            }
+
+            try {
+                const response = await fetch('api/save_review.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        product_id: this.selectedProduct.id,
+                        seller_id: this.selectedProduct.seller_id,
+                        rating: this.reviewForm.rating,
+                        comment: this.reviewForm.comment
+                    })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    alert("Avis envoyé ! Merci.");
+                    this.showReviewForm = false;
+                    this.reviewForm = { rating: 5, comment: '' };
+                    this.fetchMesAvis(); // CORRECTION: Actualise la liste immédiatement
+                } else {
+                    alert("Erreur : " + data.message);
+                }
+            } catch (err) {
+                console.error("Erreur technique avis :", err);
+                alert("Le serveur n'a pas pu enregistrer ton avis.");
+            }
+        },
+
         // 5. FONCTIONS PROFIL
         getMyLastProduct() {
             if (!this.currentUser) return null;
@@ -233,12 +313,28 @@ createApp({
         getMyProductsCount() {
             if (!this.currentUser) return 0;
             return this.produits.filter(p => p.seller_id == this.currentUser.id).length;
+        }, // CORRECTION: Virgule ajoutée ici
+
+        // CORRECTION: Fonctions remontées à l'intérieur de 'methods'
+        async fetchMesAvis() {
+            try {
+                const response = await fetch('api/mes_avis.php');
+                this.mesAvis = await response.json();
+            } catch (err) { console.error("Erreur avis:", err); }
+        },
+
+        getAvisPourProduit(productId) {
+            return this.mesAvis.find(a => a.product_id == productId);
         }
-    },
+
+    }, // FIN DES METHODS
 
     mounted() {
         this.checkSession();
         this.fetchProduits();
         this.fetchCategories();
+        this.fetchMesAchats();
+        this.fetchMesAvis(); // CORRECTION: Appel ajouté au chargement
     }
+
 }).mount('#app')
