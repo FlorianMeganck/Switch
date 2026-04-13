@@ -505,10 +505,24 @@
                         <div class="mt-10">
                             <h3 class="text-xl font-bold text-slate-800 mb-4">Mes achats récents 🛍️</h3>
                             
-                            <div v-if="mesAchats.length > 0" class="grid grid-cols-1 gap-4">
-                                <div v-for="achat in mesAchats" :key="achat.id" @click="voirProduit(achat)"
-                                    class="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm cursor-pointer hover:border-emerald-300 transition-all hover:shadow-md group">
+                            <div v-if="mesAchats.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div v-for="achat in mesAchats" :key="achat.id" 
+                                    @click="voirProduit(achat)"
+                                    class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer border border-slate-100">
+                                    
+                                    <div class="relative h-40 bg-slate-100 overflow-hidden">
+                                        <img v-if="achat.image" :src="'uploads/' + achat.image" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                        <div v-else class="w-full h-full flex items-center justify-center text-4xl">📦</div>
                                     </div>
+
+                                    <div class="p-4">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h3 class="font-bold text-slate-800 leading-tight">{{ achat.name || 'Produit acheté' }}</h3>
+                                            <span class="text-emerald-600 font-black">{{ achat.price || '0' }} SW</span>
+                                        </div>
+                                        <span class="text-[10px] font-black px-2 py-1 rounded bg-emerald-50 text-emerald-500 uppercase inline-block mt-2">Acheté ✅</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div v-else class="bg-slate-50 p-8 rounded-2xl border border-dashed border-slate-200 text-center">
@@ -521,23 +535,10 @@
                             
                             <div v-if="mesAvis.length > 0" class="space-y-4">
                                 <div v-for="avis in mesAvis" :key="avis.id" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                                    </div>
-                            </div>
-                            
-                            <div v-else class="text-center p-8 bg-slate-50 rounded-2xl border border-dashed">
-                                <p class="text-slate-400 text-xs font-bold uppercase">Aucun avis rédigé</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-10 border-t border-slate-100 pt-10">
-                            <h3 class="text-xl font-bold text-slate-800 mb-4">Mes avis envoyés 📝</h3>
-                            
-                            <div v-if="mesAvis.length > 0" class="space-y-4">
-                                <div v-for="avis in mesAvis" :key="avis.id" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
                                     <div class="flex justify-between items-start mb-2">
                                         <p class="font-bold text-slate-800">{{ avis.product_name }}</p>
                                         <div class="flex">
-                                            <span v-for="s in avis.rating">⭐</span>
+                                            <span v-for="s in avis.rating" :key="s">⭐</span>
                                         </div>
                                     </div>
                                     <p class="text-slate-500 text-sm leading-relaxed">"{{ avis.comment }}"</p>
