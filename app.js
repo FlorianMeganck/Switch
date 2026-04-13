@@ -11,6 +11,8 @@ createApp({
             categories: [], 
             selectedProduct: null, // Produit actuellement regardé
             selectedFile: null,    // Fichier image en cours d'upload
+            showPassLogin: false,    // État pour la connexion
+            showPassRegister: false,
             
             // -- FORMULAIRES --
             login_form: { email: '', password: '', remember: false },

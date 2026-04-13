@@ -50,8 +50,13 @@
                         <h1 class="text-4xl font-bold mb-4">Achète et vends facilement 👕</h1>
                         <p class="text-slate-600 mb-6">SWITCH est une plateforme entre étudiants pour acheter, vendre ou échanger.</p>
                         <div class="flex gap-3">
-                            <button @click="page = 'vendre'" class="bg-black text-white px-6 py-3 rounded-xl font-bold">Vendre</button>
-                            <button @click="page = 'troc'" class="bg-white border px-6 py-3 rounded-xl font-bold">Voir</button>
+                            <button @click="currentUser ? page = 'vendre' : page = 'connexion'" 
+                                    class="bg-black text-white px-6 py-3 rounded-xl font-bold">
+                                Vendre
+                            </button>
+                            <button @click="page = 'troc'" class="bg-white border px-6 py-3 rounded-xl font-bold">
+                                Voir
+                            </button>
                         </div>
                     </div>
                     <img src="https://picsum.photos/600/400" class="rounded-xl shadow hidden md:block">
@@ -119,12 +124,20 @@
                             class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
                     </div>
 
-                    <div>
+                    <div class="relative">
                         <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Mot de passe</label>
-                        <input type="password" v-model="login_form.password" required 
-                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                        <div class="relative">
+                            <input :type="showPassLogin ? 'text' : 'password'" 
+                                v-model="login_form.password" required 
+                                class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition pr-12">
+                            
+                            <button type="button" 
+                                    @click="showPassLogin = !showPassLogin"
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-xl opacity-50 hover:opacity-100 transition">
+                                {{ showPassLogin ? '👁️' : '🙈' }}
+                            </button>
+                        </div>
                     </div>
-
                     <div class="flex items-center gap-2 mt-4 ml-1">
                         <input type="checkbox" v-model="login_form.remember" id="remember" class="w-4 h-4 accent-emerald-600 cursor-pointer">
                         <label for="remember" class="text-[10px] font-black text-slate-400 cursor-pointer uppercase">Se souvenir de moi</label>
@@ -161,8 +174,17 @@
 
                 <div>
                     <label class="block text-[10px] font-black uppercase text-slate-400 mb-1 ml-1">Mot de passe</label>
-                    <input type="password" v-model="register_form.password" required 
-                        class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    <div class="relative">
+                        <input :type="showPassRegister ? 'text' : 'password'" 
+                            v-model="register_form.password" required 
+                            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition pr-12">
+                        
+                        <button type="button" 
+                                @click="showPassRegister = !showPassRegister"
+                                class="absolute right-4 top-1/2 -translate-y-1/2 text-xl opacity-50 hover:opacity-100 transition">
+                            {{ showPassRegister ? '👁️' : '🙈' }}
+                        </button>
+                    </div>
                 </div>
 
                 <p v-if="error" class="text-red-500 text-xs font-bold mt-2 ml-1">{{ error }}</p>
