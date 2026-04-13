@@ -39,7 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo json_encode([
             'success' => true, 
-            'user' => ['username' => $user, 'id' => $_SESSION['user_id']]
+            'user' => [
+                'username' => $user, 
+                'id' => $_SESSION['user_id'],
+                'balance' => 0.00
+            ]
         ]);
 
     } catch (PDOException $e) {

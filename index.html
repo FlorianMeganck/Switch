@@ -372,7 +372,9 @@
                             </div>
                         </div>
 
-                        <button @click="alert('Action : Acheter')" class="w-full bg-black text-white font-black py-5 rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-100">
+                        <button v-if="currentUser && currentUser.id !== selectedProduct.seller_id"
+                                @click="alert('Action : Acheter')" 
+                                class="w-full bg-black text-white font-black py-5 rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-100">
                             Acheter cet article
                         </button>
                     </div>
@@ -402,7 +404,9 @@
                         <div class="grid grid-cols-2 gap-4 mt-8">
                             <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
                                 <span class="block text-[10px] font-black uppercase text-slate-400 mb-1">Mon Solde</span>
-                                <span class="text-2xl font-black text-emerald-600">0.00 SW</span>
+                                <span class="text-2xl font-black text-emerald-600">
+                                    {{ currentUser ? currentUser.balance : '0.00' }} SW
+                                </span>
                             </div>
                             <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
                                 <span class="block text-[10px] font-black uppercase text-slate-400 mb-1">Objets en ligne</span>

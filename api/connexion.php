@@ -1,12 +1,12 @@
 <?php
-// 1. Configuration de base (Sécurité & Format)
+// Configuration de base (Sécurité & Format)
 session_start();
 header('Content-Type: application/json');
 
-// 2. Connexion DB
+// Connexion DB
 require_once __DIR__ . '/config/db_access.php';
 
-// 3. Récupération du JSON
+// Récupération du JSON
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
@@ -21,12 +21,12 @@ if (!$email || !$password) {
 }
 
 try {
-    // 4. Recherche de l'utilisateur
+    // Recherche de l'utilisateur
     $stmt = $connexion->prepare("SELECT * FROM users WHERE email = :e");
     $stmt->execute([':e' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // 5. Vérification du mot de passe
+    // Vérification du mot de passe
     if ($user && password_verify($password, $user['password_hash'])) {
         
         // --- GESTION DE LA SESSION ---
@@ -46,17 +46,17 @@ try {
                 setcookie('remember_user', '', time() - 3600, '/');
             }
 
-            // 6. Succès : ce qui est attendu
+            // Succès : ce qui est attendu
             echo json_encode([
                 'success' => true,
                 'user' => [
                     'username' => $user['username'],
-                    'id' => $user['id']
+                    'id' => $user['id'],
+                    'balance' => $user['balance']
                 ]
             ]);
             http_response_code(200);
-
-        } // <--- C'EST CETTE ACCOLADE QUI MANQUE (ferme le if de la ligne 31)
+        }
 
         else {
             // échec de la connexion : identifiants incorrects

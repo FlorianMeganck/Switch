@@ -7,14 +7,20 @@ require_once __DIR__ . '/config/db_access.php'; //on vérifie dans la DB le cont
 $response = ['connected' => false, 'user' => null];
 
 if (isset($_SESSION['user_id'])) {
-    // On renvoie les infos si l'utilisateur est déjà connecté
-    $response = [
-        'connected' => true,
-        'user' => [
-            'username' => $_SESSION['username'], 
-            'id' => $_SESSION['user_id']
-        ]
-    ];
+    $stmt = $connexion->prepare("SELECT id, username, balance FROM users WHERE id = :id");
+    $stmt->execute([':id' => $_SESSION['user_id']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        $response = [
+            'connected' => true,
+            'user' => [
+                'username' => $user['username'], 
+                'id' => $user['id'],
+                'balance' => $user['balance'] // Ajout du solde
+            ]
+        ];
+    }
 }
 else if (isset($_COOKIE['remember_user'])) {
     $user_id = $_COOKIE['remember_user']; // Dans connexion.php, on a stocké l'ID dans ce cookie
