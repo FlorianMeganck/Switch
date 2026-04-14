@@ -18,12 +18,13 @@ if (!$author_id || !$product_id || !$rating || !$comment || !$seller_id) {
 }
 
 try {
-    // 3. SÉCURITÉ : Vérifier que l'utilisateur est bien l'acheteur de ce produit
-    $stmtCheck = $connexion->prepare("SELECT id FROM products WHERE id = ? AND buyer_id = ? AND is_sold = 'oui'");
-    $stmtCheck->execute([$product_id, $author_id]); // Utilisation de $author_id corrigée
+    // 3. SÉCURITÉ : On vérifie si une transaction existe pour cet acheteur et ce produit
+    $stmtCheck = $connexion->prepare("SELECT id FROM transactions WHERE product_id = ? AND buyer_id = ?");
+    $stmtCheck->execute([$product_id, $author_id]);
     
     if (!$stmtCheck->fetch()) {
-        echo json_encode(['success' => false, 'message' => 'Action non autorisée : vous n\'avez pas acheté cet objet.']);
+        // Si aucune ligne n'est trouvée dans 'transactions', l'avis est refusé
+        echo json_encode(['success' => false, 'message' => 'Action non autorisée : achat non trouvé.']);
         exit;
     }
 

@@ -35,15 +35,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        // 1. LOGIQUE DE LA CATÉGORIE
         if (!empty($new_cat)) {
+            // Création d'une nouvelle catégorie si le champ est rempli
             $stmtCat = $connexion->prepare("INSERT INTO categories (name) VALUES (:name)");
             $stmtCat->execute([':name' => $new_cat]);
             $category_id = $connexion->lastInsertId();
+        } 
+        
+        // SÉCURITÉ : Si l'ID est toujours vide, on arrête pour éviter l'erreur SQL
+        if (empty($category_id)) {
+            echo json_encode(['success' => false, 'message' => 'Veuillez sélectionner ou créer une catégorie.']);
+            exit;
         }
 
-        $sql = "INSERT INTO products (name, description, price, `condition`, seller_id, category_id, is_sold, image) 
-                VALUES (:n, :d, :p, :co, :s, :ca, 'non', :img)";
-        
+        // 2. INSERTION DU PRODUIT
+        $sql = "INSERT INTO products (name, description, price, `condition`, seller_id, category_id, image) 
+        VALUES (:n, :d, :p, :co, :s, :ca, :img)";
+
         $statement = $connexion->prepare($sql);
         $statement->execute([
             ':n' => $name,
@@ -58,6 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => true, 'message' => 'Produit ajouté avec succès !']);
 
     } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Erreur, veuillez réessayer : ' . $e->getMessage()]);
+        // Renvoie l'erreur précise si ça bloque encore
+        echo json_encode(['success' => false, 'message' => 'Erreur SQL : ' . $e->getMessage()]);
     }
-}

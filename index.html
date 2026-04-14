@@ -266,6 +266,9 @@
                     <button type="submit" class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl hover:bg-emerald-700 transition shadow-lg mt-4">
                         Mettre en ligne
                     </button>
+                    <div v-if="error" class="bg-red-50 text-red-500 p-4 rounded-2xl text-xs font-bold border border-red-100 mb-4">
+                        ⚠️ {{ error }}
+                    </div>
                 </form>
             </div>
 
@@ -395,7 +398,8 @@
                         </div>
 
                         <div class="pt-4">
-                            <button v-if="currentUser && currentUser.id !== selectedProduct.seller_id && selectedProduct.is_sold === 'non'"
+                            
+                            <button v-if="currentUser && currentUser.id !== selectedProduct.seller_id && !selectedProduct.purchase_date"
                                     @click="acheterProduit(selectedProduct.id)" 
                                     class="w-full bg-black text-white font-black py-5 rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-100">
                                 Acheter cet article
@@ -405,14 +409,16 @@
                                 class="bg-emerald-50 p-6 rounded-3xl border border-emerald-100 mt-4">
                                 <p class="text-[10px] font-black uppercase text-emerald-600 mb-2">Votre avis a été envoyé ✅</p>
                                 <div class="flex gap-1 mb-2">
-                                    <span v-for="star in getAvisPourProduit(selectedProduct.id).rating" class="text-sm">⭐</span>
+                                    <span v-for="star in getAvisPourProduit(selectedProduct.id).rating" :key="star" class="text-sm">⭐</span>
                                 </div>
                                 <p class="text-slate-600 italic text-sm">"{{ getAvisPourProduit(selectedProduct.id).comment }}"</p>
                             </div>
 
                             <div v-else-if="currentUser && selectedProduct.buyer_id == currentUser.id">
-                                <button v-if="!showReviewForm" @click="showReviewForm = true" class="...">Laisser un avis au vendeur</button>
-                                <div v-if="showReviewForm" class="..."> </div>
+                                <button v-if="!showReviewForm" @click="showReviewForm = true" 
+                                        class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl shadow-lg mt-4">
+                                    Laisser un avis au vendeur
+                                </button>
                             </div>
 
                             <div v-if="showReviewForm" class="bg-slate-50 p-6 rounded-3xl border border-emerald-100 space-y-4 mt-4">
@@ -432,7 +438,7 @@
 
                                 <div>
                                     <label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Commentaire</label>
-                                    <textarea v-model="reviewForm.comment" placeholder="Le produit est-il conforme ? Le vendeur était-il sympa ?"
+                                    <textarea v-model="reviewForm.comment" placeholder="Le produit est-il conforme ?"
                                             class="w-full p-4 bg-white border border-slate-200 rounded-2xl h-24 outline-none focus:ring-2 focus:ring-emerald-500 transition"></textarea>
                                 </div>
 
@@ -442,8 +448,8 @@
                                 </div>
                             </div>
 
-                            <p v-if="currentUser && selectedProduct.seller_id == currentUser.id && selectedProduct.is_sold === 'non'" 
-                            class="text-center text-xs font-bold text-slate-400 uppercase italic">
+                            <p v-if="currentUser && selectedProduct.seller_id == currentUser.id && !selectedProduct.purchase_date" 
+                            class="text-center text-xs font-bold text-slate-400 uppercase italic mt-4">
                                 Cet objet est actuellement dans votre boutique
                             </p>
 
