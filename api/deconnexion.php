@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/config/hsts_security.php';
 session_start();
 
 $_SESSION = array();

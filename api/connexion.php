@@ -1,5 +1,5 @@
 <?php
-// Configuration de base (Sécurité & Format)
+require_once __DIR__ . '/config/hsts_security.php';
 session_start();
 header('Content-Type: application/json');
 

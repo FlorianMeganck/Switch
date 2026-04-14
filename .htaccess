@@ -1,4 +1,6 @@
 Header always set Content-Security-Policy "default-src 'unsafe-inline' 'unsafe-eval';\
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+Header set Acess-Control-Allow-Origin: http://switch.hepl-e-business.be 
     base-uri 'self';\
     connect-src 'self' https://ebus2-bdapps.hepl-e-business.be/dispas201203/api/clients.php;\
     frame-src 'self';\
@@ -9,5 +11,3 @@ Header always set Content-Security-Policy "default-src 'unsafe-inline' 'unsafe-e
     script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js;\
     style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css;\
     worker-src 'self' blob:;"
-
-Header set Acess-Control-Allow-Origin: *

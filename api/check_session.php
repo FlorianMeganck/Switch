@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/config/hsts_security.php';
 session_start(); // On regarde si une session existe
 header('Content-Type: application/json');
 
