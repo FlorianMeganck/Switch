@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/config/hsts_security.php';
 // On indique au navigateur qu'on renvoie du JSON
 header('Content-Type: application/json');
 

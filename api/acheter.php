@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/config/hsts_security.php';
 session_start();
 header('Content-Type: application/json');
 require_once __DIR__ . '/config/db_access.php';
@@ -58,5 +57,5 @@ try {
 
 } catch (Exception $e) {
     if ($connexion->inTransaction()) $connexion->rollBack();
-    echo json_encode(['success' => false, 'message' => 'Erreur technique.']);
+    echo json_encode(['success' => false, 'message' => 'Une erreur technique est survenue.']);
 }
