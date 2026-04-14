@@ -37,13 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // 1. LOGIQUE DE LA CATÉGORIE
         if (!empty($new_cat)) {
-            // Création d'une nouvelle catégorie si le champ est rempli
             $stmtCat = $connexion->prepare("INSERT INTO categories (name) VALUES (:name)");
             $stmtCat->execute([':name' => $new_cat]);
             $category_id = $connexion->lastInsertId();
         } 
         
-        // SÉCURITÉ : Si l'ID est toujours vide, on arrête pour éviter l'erreur SQL
         if (empty($category_id)) {
             echo json_encode(['success' => false, 'message' => 'Veuillez sélectionner ou créer une catégorie.']);
             exit;
@@ -51,9 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 2. INSERTION DU PRODUIT
         $sql = "INSERT INTO products (name, description, price, `condition`, seller_id, category_id, image) 
-        VALUES (:n, :d, :p, :co, :s, :ca, :img)";
+                VALUES (:n, :d, :p, :co, :s, :ca, :img)";
 
         $statement = $connexion->prepare($sql);
+        
+        // SÉCURITÉ : On vérifie que la préparation n'a pas échoué (évite l'Erreur 500)
+        if (!$statement) {
+            echo json_encode(['success' => false, 'message' => 'Erreur de préparation SQL : Vérifie tes colonnes DB.']);
+            exit;
+        }
+
         $statement->execute([
             ':n' => $name,
             ':d' => $description,
@@ -66,7 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo json_encode(['success' => true, 'message' => 'Produit ajouté avec succès !']);
 
-    } catch (PDOException $e) {
-        // Renvoie l'erreur précise si ça bloque encore
-        echo json_encode(['success' => false, 'message' => 'Erreur SQL : ' . $e->getMessage()]);
+    } catch (Throwable $e) { 
+        // MODIFICATION MAJEURE : Throwable attrape les erreurs SQL ET les crashs fatals PHP
+        http_response_code(200); // On force un code 200 pour que le JS puisse lire le JSON
+        echo json_encode(['success' => false, 'message' => 'Erreur interne : ' . $e->getMessage()]);
     }
+}
