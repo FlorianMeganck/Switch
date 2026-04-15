@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/config/security.php';
 require_once __DIR__ . '/config/db_access.php';
 
 $data = json_decode(file_get_contents('php://input'), true);

@@ -307,7 +307,9 @@
                             <option value="Usagé">Usagé</option>
                         </select>
                     </div>
-
+                    <div v-if="error" class="bg-red-50 text-red-500 p-4 rounded-2xl text-xs font-bold border border-red-100 mb-4">
+                        ⚠️ {{ error }}
+                    </div>
                     <button type="submit" class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl shadow-lg mt-4">
                         Enregistrer les modifications
                     </button>

@@ -171,6 +171,7 @@ createApp({
                 const data = await response.json();
 
                 if (data.success) {
+                    this.selectedFile = null;
                     this.page = 'accueil';
                     this.fetchProduits();
                     this.vendreForm = { name: '', category_id: '', new_category_name: '', description: '', price: '', condition: 'Bon état' };
@@ -210,6 +211,10 @@ createApp({
         prepareEdit(produit) {
             this.editForm = { ...produit };
             this.editForm.current_image = produit.image;
+            
+            // FORCE la valeur à vide pour éviter le mot "undefined"
+            this.editForm.new_category_name = ''; 
+            
             this.page = 'editer';
         },
 
@@ -232,6 +237,7 @@ createApp({
                 const data = await response.json();
 
                 if (data.success) {
+                    this.selectedFile = null;
                     this.page = 'profil';
                     this.fetchProduits();
                 } else {
