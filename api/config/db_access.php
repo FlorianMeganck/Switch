@@ -3,7 +3,7 @@ $host = 'localhost';
 $db   = 'ebus2_projet05_siii57';
 $user = 'hh76ic64hcii';
 $pass = 't7=h1h#4hh';
-$charset = 'utf8mb4';
+$charset = 'utf8mb4'; //pour éviter de qu'il y ait des problèmes avec des émojis, ...
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
@@ -11,7 +11,7 @@ $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Active les erreurs propres
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Tableaux associatifs uniquement
-    PDO::ATTR_EMULATE_PREPARES   => false,                  // Sécurité maximale anti-injection SQL
+    PDO::ATTR_EMULATE_PREPARES   => false,                  // Sécurité anti-injection SQL
 ];
 
 try {

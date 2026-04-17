@@ -13,7 +13,7 @@ if (!$product_id || !$buyer_id) {
 }
 
 try {
-    // 2. Récupérer les infos du produit et du vendeur
+    // Récupérer les infos du produit et du vendeur
     $stmtProd = $connexion->prepare("SELECT price, seller_id FROM products WHERE id = ?");
     $stmtProd->execute([$product_id]);
     $product = $stmtProd->fetch();
@@ -26,7 +26,7 @@ try {
     $price = $product['price'];
     $seller_id = $product['seller_id'];
 
-    // 3. Vérifier le solde de l'acheteur
+    // Vérifier le solde de l'acheteur
     $stmtUser = $connexion->prepare("SELECT balance FROM users WHERE id = ?");
     $stmtUser->execute([$buyer_id]);
     $user = $stmtUser->fetch();
@@ -39,14 +39,13 @@ try {
     // --- DÉBUT DE LA TRANSACTION SQL ---
     $connexion->beginTransaction();
 
-    // 4. Déduire l'argent de l'acheteur
+    // Déduire l'argent de l'acheteur
     $connexion->prepare("UPDATE users SET balance = balance - ? WHERE id = ?")->execute([$price, $buyer_id]);
 
-    // 5. Créditer le vendeur
+    // Créditer le vendeur
     $connexion->prepare("UPDATE users SET balance = balance + ? WHERE id = ?")->execute([$price, $seller_id]);
 
-    // 6. CRÉER LA TRANSACTION OFFICIELLE
-    // C'est cette ligne qui remplace l'ancien "UPDATE products"
+    // Créer la transaction officielle
     $stmtTrans = $connexion->prepare("
         INSERT INTO transactions (product_id, buyer_id, seller_id, balance_paid) 
         VALUES (?, ?, ?, ?)

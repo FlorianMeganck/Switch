@@ -249,7 +249,7 @@ createApp({
         },
 
         async supprimerProduit(id) {
-            if (!confirm("Es-tu sûr de vouloir supprimer cet article ?")) return;
+            if (!confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) return;
 
             const formData = new FormData();
             formData.append('product_id', id);
@@ -300,7 +300,7 @@ createApp({
                     alert("Avis envoyé ! Merci.");
                     this.showReviewForm = false;
                     this.reviewForm = { rating: 5, comment: '' };
-                    this.fetchMesAvis(); // CORRECTION: Actualise la liste immédiatement
+                    this.fetchMesAvis();
                 } else {
                     alert("Erreur : " + data.message);
                 }
@@ -319,9 +319,8 @@ createApp({
         getMyProductsCount() {
             if (!this.currentUser) return 0;
             return this.produits.filter(p => p.seller_id == this.currentUser.id).length;
-        }, // CORRECTION: Virgule ajoutée ici
+        },
 
-        // CORRECTION: Fonctions remontées à l'intérieur de 'methods'
         async fetchMesAvis() {
             try {
                 const response = await fetch('api/mes_avis.php');
@@ -333,14 +332,14 @@ createApp({
             return this.mesAvis.find(a => a.product_id == productId);
         }
 
-    }, // FIN DES METHODS
+    },
 
     mounted() {
         this.checkSession();
         this.fetchProduits();
         this.fetchCategories();
         this.fetchMesAchats();
-        this.fetchMesAvis(); // CORRECTION: Appel ajouté au chargement
+        this.fetchMesAvis();
     }
 
 }).mount('#app')
