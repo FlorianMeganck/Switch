@@ -1,8 +1,7 @@
 <?php
 require_once __DIR__ . '/config/security.php';
 header('Content-Type: application/json');
-
-require_once __DIR__ . '/config/db_access.php'; //on vérifie dans la DB le contenu du cookie
+require_once __DIR__ . '/config/db_access.php';
 
 $response = ['connected' => false, 'user' => null];
 

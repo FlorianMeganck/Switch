@@ -1,18 +1,22 @@
 <?php
-define('USER', 'hh76ic64hcii');
-define('PASSWD', 't7=h1h#4hh');
-define('SERVER', 'localhost');
-define('BASE', 'ebus2_projet05_siii57');
+$host = 'localhost';
+$db   = 'ebus2_projet05_siii57';
+$user = 'hh76ic64hcii';
+$pass = 't7=h1h#4hh';
+$charset = 'utf8mb4';
 
-// le seul endroit où je vais dire le type de base de données SQL que j'utilise
-$dsn = 'mysql:host=' . SERVER . ';dbname=' . BASE;
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
-// créer la connexion
+// Les options de sécurité et d'optimisation
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Active les erreurs propres
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Tableaux associatifs uniquement
+    PDO::ATTR_EMULATE_PREPARES   => false,                  // Sécurité maximale anti-injection SQL
+];
+
 try {
-    $connexion = new PDO($dsn, USER, PASSWD);
-} catch (PDOException $e) {
-    echo 'Échec de la connexion : ' . $e->getMessage();
-    exit();
+    $connexion = new PDO($dsn, $user, $pass, $options);
+} catch (\PDOException $e) {
+    // En cas d'échec, on arrête proprement sans exposer tes identifiants
+    exit("Erreur technique de connexion.");
 }
-
-// si tout se passe bien on a une variable $connexion

@@ -1,8 +1,6 @@
 <?php
-// On indique au navigateur qu'on renvoie du JSON
+require_once __DIR__ . '/config/security.php';
 header('Content-Type: application/json');
-
-// Connexion à la base de données (située dans le même dossier api/)
 require_once __DIR__ . '/config/db_access.php';
 
 try {

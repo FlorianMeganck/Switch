@@ -1,8 +1,6 @@
 <?php
 require_once __DIR__ . '/config/security.php';
 header('Content-Type: application/json');
-
-// Connexion DB
 require_once __DIR__ . '/config/db_access.php';
 
 // Récupération du JSON

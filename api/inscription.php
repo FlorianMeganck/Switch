@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/config/security.php';
 header('Content-Type: application/json');
-
 require_once __DIR__ . '/config/db_access.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
