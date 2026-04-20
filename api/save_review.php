@@ -9,7 +9,7 @@ $product_id = $data['product_id'] ?? null;
 $seller_id = $data['seller_id'] ?? null;
 $rating = $data['rating'] ?? null;
 $comment = $data['comment'] ?? null;
-$author_id = $_SESSION['user_id'] ?? null; // On utilise author_id (le nom dans ta DB)
+$author_id = $_SESSION['user_id'] ?? null;
 
 // 2. Vérifications de base
 if (!$author_id || !$product_id || !$rating || !$comment || !$seller_id) {
@@ -36,7 +36,7 @@ try {
         exit;
     }
 
-    // 5. Insertion dans la table reviews (Noms de colonnes raccord avec ta DB)
+    // 5. Insertion dans la table reviews
     $stmt = $connexion->prepare("INSERT INTO reviews (product_id, author_id, seller_id, rating, comment) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([
         $product_id,

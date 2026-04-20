@@ -53,9 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $statement = $connexion->prepare($sql);
         
-        // SÉCURITÉ : On vérifie que la préparation n'a pas échoué (évite l'Erreur 500)
         if (!$statement) {
-            echo json_encode(['success' => false, 'message' => 'Erreur de préparation SQL : Vérifie tes colonnes DB.']);
+            echo json_encode(['success' => false, 'message' => 'Erreur de préparation SQL : Vérifier les champs.']);
             exit;
         }
 
@@ -72,8 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => true, 'message' => 'Produit ajouté avec succès !']);
 
     } catch (Throwable $e) { 
-        // MODIFICATION MAJEURE : Throwable attrape les erreurs SQL ET les crashs fatals PHP
-        http_response_code(200); // On force un code 200 pour que le JS puisse lire le JSON
+        http_response_code(200);
         echo json_encode(['success' => false, 'message' => 'Erreur interne : ' . $e->getMessage()]);
     }
 }

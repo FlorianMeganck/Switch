@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_SESSION['user_id']; // Sécurité : on vérifie que c'est bien l'annonce du user
 
     try {
-        // On ne supprime que si l'ID produit ET l'ID vendeur correspondent
+        // On ne supprime que si l'ID produit et l'ID vendeur correspondent
         $sql = "DELETE FROM products WHERE id = :pid AND seller_id = :sid";
         $statement = $connexion->prepare($sql);
         $statement->execute([

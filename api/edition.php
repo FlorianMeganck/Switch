@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cat = $connexion->lastInsertId();
         }
 
-        // Gestion de la nouvelle photo (si envoyée)
+        // Gestion de la nouvelle photo
         $image_sql = "";
         $params = [':n' => $name, ':d' => $desc, ':p' => $price, ':co' => $cond, ':ca' => $cat, ':id' => $id];
 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             $image_name = uniqid() . '.' . $ext;
             
-            // On sort de api/ vers uploads/
+            // On va vers uploads
             if (move_uploaded_file($file['tmp_name'], '../uploads/' . $image_name)) {
                 $image_sql = ", image = :img";
                 $params[':img'] = $image_name;

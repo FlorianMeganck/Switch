@@ -7,12 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    $user = $data['username'] ?? null;  //lecture du json comme dans connexion
+    $user = $data['username'] ?? null;  //lecture du json
     $mail = $data['email'] ?? null;
     $pass = $data['password'] ?? null;
 
     if (!$user || !$mail || !$pass) {
-        echo json_encode(['success' => false, 'message' => 'Tous les champs sont obligatoires.']);
+        echo json_encode(['success' => false, 'message' => 'Tous les champs ne sont pas remplis']);
         exit;
     }
 
@@ -46,6 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
     } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => "Erreur lors de l'inscription technique."]);
+        echo json_encode(['success' => false, 'message' => "Erreur lors de l'inscription."]);
     }
 }
