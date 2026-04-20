@@ -47,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Mise à jour SQL
-        $sql = "UPDATE products SET name = :n, description = :d, price = :p, `condition` = :co, category_id = :ca $image_sql WHERE id = :id";
+        $sql = "UPDATE products SET name = :n, description = :d, price = :p, `condition` = :co, category_id = :ca $image_sql 
+        WHERE id = :id";
         $st = $connexion->prepare($sql);
         $st->execute($params);
         

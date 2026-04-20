@@ -47,8 +47,8 @@
 
                 <section class="bg-slate-100 rounded-3xl p-10 flex flex-col md:flex-row justify-between items-center gap-10">
                     <div class="max-w-md">
-                        <h1 class="text-4xl font-bold mb-4">Achète et vends facilement 👕</h1>
-                        <p class="text-slate-600 mb-6">SWITCH est une plateforme entre étudiants pour acheter, vendre ou échanger.</p>
+                        <h1 class="text-4xl font-bold mb-4">Achète et vends facilement !</h1>
+                        <p class="text-slate-600 mb-6">SWITCH est une plateforme en ligne pour acheter ou vendre un produit dont tu ne te sers plus.</p>
                         <div class="flex gap-3">
                             <button @click="currentUser ? page = 'vendre' : page = 'connexion'" 
                                     class="bg-black text-white px-6 py-3 rounded-xl font-bold">
@@ -63,7 +63,7 @@
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-6">🔥 Derniers objets ajoutés</h2>
+                    <h2 class="text-2xl font-bold mb-6">Derniers objets ajoutés</h2>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <div v-for="produit in produits.slice(0, 4)" :key="produit.id" 
@@ -106,8 +106,8 @@
                             <p class="text-sm text-slate-600">Regarde les articles</p>
                         </div>
                         <div class="bg-white p-6 rounded-2xl shadow">
-                            <div class="text-3xl">🤝</div>
-                            <h3 class="font-bold">Échange</h3>
+                            <div class="text-3xl">✍️</div>
+                            <h3 class="font-bold">Laisses un avis</h3>
                             <p class="text-sm text-slate-600">Contacte les vendeurs</p>
                         </div>
                     </div>
@@ -511,7 +511,7 @@
                             </div>
                         </div>
                         <div class="mt-10">
-                            <h3 class="text-xl font-bold text-slate-800 mb-4">Mes achats récents 🛍️</h3>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">Mes achats récents</h3>
                             
                             <div v-if="mesAchats.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div v-for="achat in mesAchats" :key="achat.id" 
@@ -539,7 +539,7 @@
                         </div>
 
                         <div class="mt-10 border-t border-slate-100 pt-10">
-                            <h3 class="text-xl font-bold text-slate-800 mb-4">Mes avis envoyés 📝</h3>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">Mes avis envoyés</h3>
                             
                             <div v-if="mesAvis.length > 0" class="space-y-4">
                                 <div v-for="avis in mesAvis" :key="avis.id" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
