@@ -43,7 +43,6 @@ try {
                 setcookie('remember_user', '', time() - 3600, '/');
             }
 
-            // Succès : ce qui est attendu
             echo json_encode([
                 'success' => true,
                 'user' => [

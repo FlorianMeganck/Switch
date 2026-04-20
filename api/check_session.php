@@ -6,6 +6,7 @@ require_once __DIR__ . '/config/db_access.php';
 $response = ['connected' => false, 'user' => null];
 
 if (isset($_SESSION['user_id'])) {
+    //Si l'utilisateur est déja connecté, on rafraichit pour avoir nottement sa balance
     $stmt = $connexion->prepare("SELECT id, username, balance FROM users WHERE id = :id");
     $stmt->execute([':id' => $_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);

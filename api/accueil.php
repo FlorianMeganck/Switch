@@ -8,11 +8,11 @@ try {
 $sql = "SELECT p.*, u.username as seller_username, c.name as category_name
         FROM products p
         JOIN users u on p.seller_id = u.id
-        LEFT JOIN categories c on p.category_id = c.id
+        JOIN categories c on p.category_id = c.id
         LEFT JOIN transactions t on p.id = t.product_id
         WHERE t.id is null
         ORDER BY p.id desc";
-            
+
     $statement = $connexion->query($sql);
     $produits = $statement->fetchAll(PDO::FETCH_ASSOC);
 
