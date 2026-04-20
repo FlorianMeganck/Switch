@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SWITCH - L'échange</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -18,7 +19,10 @@
                 
                 <div class="flex gap-8 items-center">
                     <!-- Logo Switch -->
-                    <h1 @click="page = 'accueil'" class="text-xl font-bold cursor-pointer uppercase tracking-wider">Switch</h1>
+                    <img src="img/logo.png"
+                        @click="page = 'accueil'" 
+                        class="h-10 w-auto cursor-pointer hover:opacity-80 transition-opacity" 
+                        alt="Logo SWITCH">
                     
                     <div class="flex gap-6">
                         <button @click="page = 'accueil'" class="text-sm font-semibold hover:text-emerald-600">Accueil</button>
