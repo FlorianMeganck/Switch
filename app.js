@@ -129,7 +129,7 @@ createApp({
             await fetch('api/deconnexion.php');
             this.currentUser = null;
             this.mesAchats = [];
-            this.mesAvis = []; // CORRECTION: Vider les avis à la déconnexion
+            this.mesAvis = [];
             this.page = 'accueil';
         },
 
