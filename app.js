@@ -94,7 +94,7 @@ createApp({
                     this.page = 'accueil';
                     this.error = '';
                     this.fetchMesAchats();
-                    this.fetchMesAvis(); // CORRECTION: Charger les avis à la connexion
+                    this.fetchMesAvis();
                 } else {
                     this.error = data.message;
                 }
@@ -259,7 +259,16 @@ createApp({
                 const data = await response.json();
 
                 if (data.success) {
-                    this.fetchProduits();
+                    // 1. On rafraîchit la liste des produits
+                    await this.fetchProduits(); 
+                    
+                    // 2. IMPORTANT : On redirige vers le catalogue
+                    this.page = 'troc'; 
+                    
+                    // 3. On vide le produit sélectionné car il n'existe plus
+                    this.selectedProduct = null; 
+                    
+                    console.log("Objet supprimé et retour au troc.");
                 } else {
                     this.error = data.message;
                 }
@@ -277,7 +286,7 @@ createApp({
             }
         },
 
-        async envoyerAvis() {
+        async laisserAvis() {
             if (!this.reviewForm.comment) {
                 alert("Pense à laisser un petit commentaire !");
                 return;

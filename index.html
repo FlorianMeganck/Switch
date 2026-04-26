@@ -404,61 +404,51 @@
                         </div>
 
                         <div class="pt-4">
-                            
-                            <button v-if="currentUser && currentUser.id !== selectedProduct.seller_id && !selectedProduct.purchase_date"
-                                    @click="acheterProduit(selectedProduct.id)" 
-                                    class="w-full bg-black text-white font-black py-5 rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-100">
-                                Acheter cet article
-                            </button>
+                        <button v-if="currentUser && currentUser.id !== selectedProduct.seller_id && !selectedProduct.purchase_date"
+                                @click="acheterProduit(selectedProduct.id)" 
+                                class="w-full bg-black text-white font-black py-5 rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-100">
+                            Acheter cet article
+                        </button>
 
+                        <div v-if="currentUser && selectedProduct.seller_id == currentUser.id && !selectedProduct.purchase_date" class="space-y-3">
+                            <p class="text-center text-xs font-bold text-slate-400 uppercase italic mb-4">
+                                Cet objet est dans votre boutique
+                            </p>
+                            
+                            <div class="flex gap-3">
+                                <button @click="prepareEdit(selectedProduct)" 
+                                        class="flex-1 bg-blue-600 text-white font-bold py-4 rounded-2xl hover:bg-blue-700 transition shadow-lg">
+                                    Modifier l'annonce
+                                </button>
+                                <button @click="supprimerProduit(selectedProduct.id)" 
+                                        class="flex-1 bg-red-600 text-white font-bold py-4 rounded-2xl hover:bg-red-700 transition shadow-lg">
+                                    Supprimer
+                                </button>
+                            </div>
+                        </div>
+                                    <div v-if="currentUser && selectedProduct.buyer_id == currentUser.id && !getAvisPourProduit(selectedProduct.id)" 
+                                class="bg-slate-50 p-6 rounded-3xl border border-slate-100 mt-4">
+                                <p class="text-xs font-black uppercase text-slate-400 mb-4">Laisser un avis sur cet échange</p>
+                                <div class="flex gap-2 mb-4">
+                                    <button v-for="star in 5" :key="star" @click="reviewForm.rating = star" class="text-2xl">
+                                        {{ star <= reviewForm.rating ? '⭐' : '☆' }}
+                                    </button>
+                                </div>
+                                <textarea v-model="reviewForm.comment" placeholder="Ton avis sur le vendeur..." 
+                                    class="w-full p-4 bg-white border border-slate-200 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-emerald-500 transition mb-3"></textarea>
+                                <button @click="laisserAvis(selectedProduct.id, selectedProduct.seller_id)" 
+                                    class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl hover:bg-emerald-700 transition">
+                                    Envoyer l'avis
+                                </button>
+                            </div>
                             <div v-if="currentUser && selectedProduct.buyer_id == currentUser.id && getAvisPourProduit(selectedProduct.id)" 
                                 class="bg-emerald-50 p-6 rounded-3xl border border-emerald-100 mt-4">
-                                <p class="text-[10px] font-black uppercase text-emerald-600 mb-2">Votre avis a été envoyé ✅</p>
-                                <div class="flex gap-1 mb-2">
-                                    <span v-for="star in getAvisPourProduit(selectedProduct.id).rating" :key="star" class="text-sm">⭐</span>
+                                <p class="text-xs font-black uppercase text-emerald-600 mb-2">Ton avis envoyé ✅</p>
+                                <div class="flex mb-2">
+                                    <span v-for="s in getAvisPourProduit(selectedProduct.id).rating">⭐</span>
                                 </div>
                                 <p class="text-slate-600 italic text-sm">"{{ getAvisPourProduit(selectedProduct.id).comment }}"</p>
                             </div>
-
-                            <div v-else-if="currentUser && selectedProduct.buyer_id == currentUser.id">
-                                <button v-if="!showReviewForm" @click="showReviewForm = true" 
-                                        class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl shadow-lg mt-4">
-                                    Laisser un avis au vendeur
-                                </button>
-                            </div>
-
-                            <div v-if="showReviewForm" class="bg-slate-50 p-6 rounded-3xl border border-emerald-100 space-y-4 mt-4">
-                                <h4 class="font-bold text-slate-800 text-sm uppercase">Ton avis sur la vente</h4>
-                                
-                                <div>
-                                    <label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Note (sur 5)</label>
-                                    <div class="flex gap-2">
-                                        <button v-for="star in 5" :key="star" type="button"
-                                                @click="reviewForm.rating = star"
-                                                class="text-2xl transition"
-                                                :class="star <= reviewForm.rating ? 'grayscale-0' : 'grayscale opacity-30'">
-                                            ⭐
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Commentaire</label>
-                                    <textarea v-model="reviewForm.comment" placeholder="Le produit est-il conforme ?"
-                                            class="w-full p-4 bg-white border border-slate-200 rounded-2xl h-24 outline-none focus:ring-2 focus:ring-emerald-500 transition"></textarea>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <button @click="envoyerAvis" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl">Envoyer</button>
-                                    <button @click="showReviewForm = false" class="px-4 text-slate-400 font-bold">Annuler</button>
-                                </div>
-                            </div>
-
-                            <p v-if="currentUser && selectedProduct.seller_id == currentUser.id && !selectedProduct.purchase_date" 
-                            class="text-center text-xs font-bold text-slate-400 uppercase italic mt-4">
-                                Cet objet est actuellement dans votre boutique
-                            </p>
-
                         </div>
                     </div>
                 </div>
