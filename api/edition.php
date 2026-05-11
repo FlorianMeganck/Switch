@@ -26,13 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // La logique de création ne se déclenche QUE si $new_cat est vraiment rempli
         if (!empty($new_cat)) {
             $stmtCat = $connexion->prepare("INSERT INTO categories (name) VALUES (:name)");
-            $stmtCat->execute([':name' => $new_cat]);
+            $stmtCat->bindParam(':name' ,$new_cat ,PDO::PARAM_STR);
+            $stmtCat->execute();
             $cat = $connexion->lastInsertId();
         }
 
         // Gestion de la nouvelle photo
         $image_sql = "";
-        $params = [':n' => $name, ':d' => $desc, ':p' => $price, ':co' => $cond, ':ca' => $cat, ':id' => $id];
 
         if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === 0) {
             $file = $_FILES['product_image'];
@@ -42,15 +42,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // On va vers uploads
             if (move_uploaded_file($file['tmp_name'], '../uploads/' . $image_name)) {
                 $image_sql = ", image = :img";
-                $params[':img'] = $image_name;
             }
         }
 
-        // Mise à jour SQL
         $sql = "UPDATE products SET name = :n, description = :d, price = :p, `condition` = :co, category_id = :ca $image_sql 
         WHERE id = :id";
         $st = $connexion->prepare($sql);
-        $st->execute($params);
+
+        $st->bindParam(':n', $name, PDO::PARAM_STR, 60);
+        $st->bindParam(':d', $desc, PDO::PARAM_STR, 500);
+        $st->bindParam(':p', $price, PDO::PARAM_STR, 8);
+        $st->bindParam(':co', $cond, PDO::PARAM_STR, 20);
+        $st->bindParam(':ca', $cat, PDO::PARAM_INT, 40);
+        $st->bindParam(':id', $id, PDO::PARAM_INT);
+
+        if (!empty($image_sql)) {
+            $st->bindParam(':img', $image_name, PDO::PARAM_STR);
+        }
+
+        $st->execute();
         
         echo json_encode(['success' => true, 'message' => 'Mise à jour réussie.']);
         } catch (PDOException $e) {

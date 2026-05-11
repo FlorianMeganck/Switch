@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Logique de la catégorie
         if (!empty($new_cat)) {
             $stmtCat = $connexion->prepare("INSERT INTO categories (name) VALUES (:name)");
-            $stmtCat->execute([':name' => $new_cat]);
+            $stmtCat->bindParam(':name', $new_cat, PDO::PARAM_STR, 40);
+            $stmtCat->execute();
             $category_id = $connexion->lastInsertId();
         } 
         
@@ -62,15 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 VALUES (:n, :d, :p, :co, :s, :ca, :img)";
 
         $statement = $connexion->prepare($sql);
-        $statement->execute([
-            ':n' => $name,
-            ':d' => $description,
-            ':p' => $price,
-            ':co' => $condition,
-            ':s' => $seller_id,
-            ':ca' => $category_id,
-            ':img' => $image_name
-        ]);
+        $statement->bindParam(':n', $name, PDO::PARAM_STR, 60);
+        $statement->bindParam(':d', $description, PDO::PARAM_STR, 500);
+        $statement->bindParam(':p', $price, PDO::PARAM_STR, 8);
+        $statement->bindParam(':co', $condition, PDO::PARAM_STR, 20);
+        $statement->bindParam(':s', $seller_id, PDO::PARAM_INT);
+        $statement->bindParam(':ca', $category_id, PDO::PARAM_INT);
+        $statement->bindParam(':img', $image_name, PDO::PARAM_STR, 40);
+
+        $statement->execute();
 
         echo json_encode(['success' => true, 'message' => 'Produit ajouté avec succès !']);
 

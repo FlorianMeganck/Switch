@@ -11,8 +11,10 @@ $stmt = $connexion->prepare("
     SELECT r.*, p.name as product_name 
     FROM reviews r 
     JOIN products p ON r.product_id = p.id 
-    WHERE r.author_id = ? 
+    WHERE r.author_id = :author_id
     ORDER BY r.id DESC
 ");
-$stmt->execute([$user_id]);
+
+$stmt->bindParam(':author_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
 echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));

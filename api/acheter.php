@@ -14,8 +14,9 @@ if (!$product_id || !$buyer_id) {
 
 try {
     // Récupérer les infos du produit et du vendeur
-    $stmtProd = $connexion->prepare("SELECT price, seller_id FROM products WHERE id = ?");
-    $stmtProd->execute([$product_id]);
+    $stmtProd = $connexion->prepare("SELECT price, seller_id FROM products WHERE id = :id");
+    $stmtProd->bindParam(':id', $product_id, PDO::PARAM_INT);
+    $stmtProd->execute();
     $product = $stmtProd->fetch();
 
     if (!$product) {
@@ -27,8 +28,9 @@ try {
     $seller_id = $product['seller_id'];
 
     // Vérifier le solde de l'acheteur
-    $stmtUser = $connexion->prepare("SELECT balance FROM users WHERE id = ?");
-    $stmtUser->execute([$buyer_id]);
+    $stmtUser = $connexion->prepare("SELECT balance FROM users WHERE id = :id");
+    $stmtUser->bindParam(':id', $buyer_id, PDO::PARAM_INT);
+    $stmtUser->execute();
     $user = $stmtUser->fetch();
 
     if ($user['balance'] < $price) {
@@ -40,17 +42,28 @@ try {
     $connexion->beginTransaction();
 
     // Déduire l'argent de l'acheteur
-    $connexion->prepare("UPDATE users SET balance = balance - ? WHERE id = ?")->execute([$price, $buyer_id]);
+    $stmtBuyer = $connexion->prepare("UPDATE users SET balance = balance - :price WHERE id = :id");
+    $stmtBuyer->bindParam(':price', $price, PDO::PARAM_STR);
+    $stmtBuyer->bindParam(':id', $buyer_id, PDO::PARAM_INT);
+    $stmtBuyer->execute();
 
     // Créditer le vendeur
-    $connexion->prepare("UPDATE users SET balance = balance + ? WHERE id = ?")->execute([$price, $seller_id]);
+    $stmtSeller = $connexion->prepare("UPDATE users SET balance = balance + :price WHERE id = :id");
+    $stmtSeller->bindParam(':price', $price, PDO::PARAM_STR);
+    $stmtSeller->bindParam(':id', $seller_id, PDO::PARAM_INT);
+    $stmtSeller->execute();
 
     // Créer la transaction officielle
     $stmtTrans = $connexion->prepare("
         INSERT INTO transactions (product_id, buyer_id, seller_id, balance_paid) 
-        VALUES (?, ?, ?, ?)
+        VALUES (:p_id, :b_id, :s_id, :paid)
     ");
-    $stmtTrans->execute([$product_id, $buyer_id, $seller_id, $price]);
+    
+    $stmtTrans->bindParam(':p_id', $product_id, PDO::PARAM_INT);
+    $stmtTrans->bindParam(':b_id', $buyer_id, PDO::PARAM_INT);
+    $stmtTrans->bindParam(':s_id', $seller_id, PDO::PARAM_INT);
+    $stmtTrans->bindParam(':paid', $price, PDO::PARAM_STR);
+    $stmtTrans->execute();
 
     $connexion->commit();
     echo json_encode(['success' => true]);

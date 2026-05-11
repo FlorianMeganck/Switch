@@ -16,10 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // On ne supprime que si l'ID produit et l'ID vendeur correspondent
         $sql = "DELETE FROM products WHERE id = :pid AND seller_id = :sid";
         $statement = $connexion->prepare($sql);
-        $statement->execute([
-            ':pid' => $product_id,
-            ':sid' => $user_id
-        ]);
+        $statement->bindParam(':pid', $product_id, PDO::PARAM_INT);
+        $statement->bindParam(':sid', $user_id, PDO::PARAM_INT);
+        $statement->execute();
 
         echo json_encode(['success' => true]);
     } catch (PDOException $e) {

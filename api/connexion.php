@@ -20,7 +20,8 @@ if (!$email || !$password) {
 try {
     // Recherche de l'utilisateur
     $stmt = $connexion->prepare("SELECT * FROM users WHERE email = :e");
-    $stmt->execute([':e' => $email]);
+    $stmt->bindParam(':e' ,$email, PDO::PARAM_STR);
+    $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Vérification du mot de passe

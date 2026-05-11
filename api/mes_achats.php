@@ -8,15 +8,16 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-
 // On récupère les produits achetés avec le nom du vendeur
 $stmt = $connexion->prepare("
     SELECT p.*, u.username AS seller_username, t.purchase_date, t.balance_paid, t.buyer_id
     FROM products p
     JOIN transactions t ON p.id = t.product_id
     JOIN users u ON t.seller_id = u.id
-    WHERE t.buyer_id = ?
+    WHERE t.buyer_id = :u_id
     ORDER BY t.id DESC
 ");
-$stmt->execute([$user_id]);
+
+$stmt->bindParam(':u_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
 echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));

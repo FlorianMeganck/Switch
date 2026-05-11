@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    $user = $data['username'] ?? null;  //lecture du json
+    $user = $data['username'] ?? null;
     $mail = $data['email'] ?? null;
     $pass = $data['password'] ?? null;
 
@@ -20,8 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Vérification si l'email existe déjà
-        $check = $connexion->prepare("SELECT id FROM users WHERE email = ?");
-        $check->execute([$mail]);
+        $check = $connexion->prepare("SELECT id FROM users WHERE email = :email");
+        $check->bindParam(':email', $mail, PDO::PARAM_STR);
+        $check->execute();
         
         if ($check->fetch()) {
             echo json_encode(['success' => false, 'message' => 'Cet email est déjà utilisé.']);
@@ -31,7 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insertion
         $sql = "INSERT INTO users (username, email, password_hash) VALUES (:u, :e, :p)";
         $statement = $connexion->prepare($sql);
-        $statement->execute([':u' => $user, ':e' => $mail, ':p' => $hash]);
+        $statement->bindParam(":u", $user, PDO::PARAM_STR, 40);
+        $statement->bindParam(':e', $mail, PDO::PARAM_STR, 100);
+        $statement->bindParam(':p', $hash, PDO::PARAM_STR, 80);
+
+        $statement->execute();
 
         $_SESSION['user_id'] = $connexion->lastInsertId();
         $_SESSION['username'] = $user;

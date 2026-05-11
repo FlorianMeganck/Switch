@@ -8,16 +8,17 @@ $response = ['connected' => false, 'user' => null];
 if (isset($_SESSION['user_id'])) {
     //Si l'utilisateur est déja connecté, on rafraichit pour avoir nottement sa balance
     $stmt = $connexion->prepare("SELECT id, username, balance FROM users WHERE id = :id");
-    $stmt->execute([':id' => $_SESSION['user_id']]);
+    $stmt->bindParam(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
         $response = [
             'connected' => true,
             'user' => [
-                'username' => $user['username'], 
+                'username' => $user['username'],
                 'id' => $user['id'],
-                'balance' => $user['balance'] // Ajout du solde
+                'balance' => $user['balance']
             ]
         ];
     }
@@ -27,8 +28,9 @@ else if (isset($_COOKIE['remember_user'])) {
 
     try {
         // On vérifie que cet utilisateur existe toujours bien en base de données
-        $stmt = $connexion->prepare("SELECT id, username FROM users WHERE id = :id");
-        $stmt->execute([':id' => $user_id]);
+        $stmt = $connexion->prepare("SELECT id, username, balance FROM users WHERE id = :id");
+        $stmt->bindParam(':id' ,$user_id, PDO::PARAM_INT);
+        $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
@@ -40,7 +42,8 @@ else if (isset($_COOKIE['remember_user'])) {
                 'connected' => true,
                 'user' => [
                     'username' => $user['username'],
-                    'id' => $user['id']
+                    'id' => $user['id'],
+                    'balance' => $user['balance']
                 ]
             ];
         }

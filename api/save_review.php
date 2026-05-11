@@ -19,8 +19,10 @@ if (!$author_id || !$product_id || !$rating || !$comment || !$seller_id) {
 
 try {
     // 3. SÉCURITÉ : On vérifie si une transaction existe pour cet acheteur et ce produit
-    $stmtCheck = $connexion->prepare("SELECT id FROM transactions WHERE product_id = ? AND buyer_id = ?");
-    $stmtCheck->execute([$product_id, $author_id]);
+    $stmtCheck = $connexion->prepare("SELECT id FROM transactions WHERE product_id = :pid AND buyer_id = :bid");
+    $stmtCheck->bindParam(':pid', $product_id, PDO::PARAM_INT);
+    $stmtCheck->bindParam(':bid', $author_id, PDO::PARAM_INT);
+    $stmtCheck->execute();
     
     if (!$stmtCheck->fetch()) {
         // Si aucune ligne n'est trouvée dans 'transactions', l'avis est refusé
@@ -29,22 +31,24 @@ try {
     }
 
     // 4. SÉCURITÉ : Vérifier si un avis n'a pas déjà été laissé pour ce produit
-    $stmtDouble = $connexion->prepare("SELECT id FROM reviews WHERE product_id = ?");
-    $stmtDouble->execute([$product_id]);
+    $stmtDouble = $connexion->prepare("SELECT id FROM reviews WHERE product_id = :pid");
+    $stmtDouble->bindParam(':pid', $product_id, PDO::PARAM_INT);
+    $stmtDouble->execute();
+
     if ($stmtDouble->fetch()) {
         echo json_encode(['success' => false, 'message' => 'Vous avez déjà laissé un avis pour cet achat.']);
         exit;
     }
 
     // 5. Insertion dans la table reviews
-    $stmt = $connexion->prepare("INSERT INTO reviews (product_id, author_id, seller_id, rating, comment) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([
-        $product_id,
-        $author_id,
-        $seller_id,
-        $rating,
-        $comment
-    ]);
+    $stmt = $connexion->prepare("INSERT INTO reviews (product_id, author_id, seller_id, rating, comment) VALUES (:pid, :aid, :sid, :rt, :txt)");
+    $stmt->bindParam(':pid', $product_id, PDO::PARAM_INT);
+    $stmt->bindParam(':aid', $author_id, PDO::PARAM_INT);
+    $stmt->bindParam(':sid', $seller_id, PDO::PARAM_INT);
+    $stmt->bindParam(':rt', $rating, PDO::PARAM_INT);
+    $stmt->bindParam(':txt', $comment, PDO::PARAM_STR, 300);
+
+    $stmt->execute();
 
     echo json_encode(['success' => true]);
 
