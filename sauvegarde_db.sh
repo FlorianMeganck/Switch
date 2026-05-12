@@ -12,5 +12,5 @@ mkdir -p $DEST
 # On crée le fichier avec la date et on le compresse (.gz)
 mysqldump -u $USER -p$PASS $DB | gzip > $DEST/sauvegarde_$(date +%Y%m%d_%H%M).sql.gz
 
-# Optionnel : Supprimer les sauvegardes de plus de 3 jours pour pas saturer
+# Supprimer les sauvegardes de plus d'1 jour pour pas saturer
 find $DEST -type f -mtime +1 -delete

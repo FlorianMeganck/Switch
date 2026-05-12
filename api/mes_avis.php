@@ -7,13 +7,13 @@ $user_id = $_SESSION['user_id'] ?? null;
 if (!$user_id) { echo json_encode([]); exit; }
 
 // On récupère l'avis avec le nom du produit associé
-$stmt = $connexion->prepare("
-    SELECT r.*, p.name as product_name 
-    FROM reviews r 
-    JOIN products p ON r.product_id = p.id 
+$stmt = $connexion->prepare(
+    "SELECT r.id, r.product_id, r.author_id, r.seller_id, r.rating, r.comment, p.name as product_name
+    FROM reviews r
+    JOIN products p ON r.product_id = p.id
     WHERE r.author_id = :author_id
-    ORDER BY r.id DESC
-");
+    ORDER BY r.review_date DESC"
+    );
 
 $stmt->bindParam(':author_id', $user_id, PDO::PARAM_INT);
 $stmt->execute();

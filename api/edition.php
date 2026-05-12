@@ -48,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "UPDATE products SET name = :n, description = :d, price = :p, `condition` = :co, category_id = :ca $image_sql 
         WHERE id = :id";
         $st = $connexion->prepare($sql);
-
         $st->bindParam(':n', $name, PDO::PARAM_STR, 60);
         $st->bindParam(':d', $desc, PDO::PARAM_STR, 500);
         $st->bindParam(':p', $price, PDO::PARAM_STR, 8);

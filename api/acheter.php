@@ -43,13 +43,13 @@ try {
 
     // Déduire l'argent de l'acheteur
     $stmtBuyer = $connexion->prepare("UPDATE users SET balance = balance - :price WHERE id = :id");
-    $stmtBuyer->bindParam(':price', $price, PDO::PARAM_STR);
+    $stmtBuyer->bindParam(':price', $price, PDO::PARAM_STR, 8);
     $stmtBuyer->bindParam(':id', $buyer_id, PDO::PARAM_INT);
     $stmtBuyer->execute();
 
     // Créditer le vendeur
     $stmtSeller = $connexion->prepare("UPDATE users SET balance = balance + :price WHERE id = :id");
-    $stmtSeller->bindParam(':price', $price, PDO::PARAM_STR);
+    $stmtSeller->bindParam(':price', $price, PDO::PARAM_STR, 8);
     $stmtSeller->bindParam(':id', $seller_id, PDO::PARAM_INT);
     $stmtSeller->execute();
 

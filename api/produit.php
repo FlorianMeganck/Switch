@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Sécurité : vérification du contenu réel
         $check = getimagesize($file['tmp_name']);
         if($check === false) {
-            echo json_encode(['success' => false, 'message' => 'Le fichier n\'est pas une image réelle.']);
+            echo json_encode(['success' => false, 'message' => 'Le fichier n\'est pas une image.']);
             exit;
         }
         
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $statement->bindParam(':p', $price, PDO::PARAM_STR, 8);
         $statement->bindParam(':co', $condition, PDO::PARAM_STR, 20);
         $statement->bindParam(':s', $seller_id, PDO::PARAM_INT);
-        $statement->bindParam(':ca', $category_id, PDO::PARAM_INT);
+        $statement->bindParam(':ca', $category_id, PDO::PARAM_INT, 40);
         $statement->bindParam(':img', $image_name, PDO::PARAM_STR, 40);
 
         $statement->execute();

@@ -41,7 +41,7 @@ try {
                     'samesite' => 'Lax'
                 ]);
             } else {
-                setcookie('remember_user', '', time() - 3600, '/');
+                setcookie('remember_user', '', time() - 1000, '/');
             }
 
             echo json_encode([

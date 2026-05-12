@@ -11,7 +11,8 @@ $sql = "SELECT p.*, u.username as seller_username, c.name as category_name
         JOIN categories c on p.category_id = c.id
         LEFT JOIN transactions t on p.id = t.product_id
         WHERE t.id is null
-        ORDER BY p.id desc";
+        ORDER BY p.created_at desc, p.id asc
+        LIMIT 4";
 
     $statement = $connexion->query($sql);
     $produits = $statement->fetchAll(PDO::FETCH_ASSOC);
