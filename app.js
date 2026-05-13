@@ -4,6 +4,7 @@ createApp({
     data() {
         return {
             page: 'accueil',
+            pagePrecedente: 'accueil',
             currentUser: null,
             error: '',
             
@@ -51,6 +52,7 @@ createApp({
     methods: {
         // 1. NAVIGATION & INTERFACE
         voirProduit(produit) {
+            this.pagePrecedente = this.page;
             this.selectedProduct = produit;
             this.showReviewForm = false;
             this.page = 'detail_produit';

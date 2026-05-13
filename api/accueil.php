@@ -5,14 +5,13 @@ require_once __DIR__ . '/config/db_access.php';
 
 try {
 
-$sql = "SELECT p.*, u.username as seller_username, c.name as category_name
+$sql = "SELECT p.id, p.name, p.description, p.price, p.condition, p.seller_id, p.category_id, p.image, p.created_at, u.username as seller_username, c.name as category_name
         FROM products p
         JOIN users u on p.seller_id = u.id
         JOIN categories c on p.category_id = c.id
         LEFT JOIN transactions t on p.id = t.product_id
         WHERE t.id is null
-        ORDER BY p.created_at desc, p.id asc
-        LIMIT 4";
+        ORDER BY p.created_at desc, p.id asc";
 
     $statement = $connexion->query($sql);
     $produits = $statement->fetchAll(PDO::FETCH_ASSOC);

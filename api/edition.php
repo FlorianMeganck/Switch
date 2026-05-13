@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $st->bindParam(':d', $desc, PDO::PARAM_STR, 500);
         $st->bindParam(':p', $price, PDO::PARAM_STR, 8);
         $st->bindParam(':co', $cond, PDO::PARAM_STR, 20);
-        $st->bindParam(':ca', $cat, PDO::PARAM_INT, 40);
+        $st->bindParam(':ca', $cat, PDO::PARAM_INT);
         $st->bindParam(':id', $id, PDO::PARAM_INT);
 
         if (!empty($image_sql)) {
