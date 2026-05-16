@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 // On récupère les produits achetés avec le nom du vendeur
 $stmt = $connexion->prepare(
-    "SELECT p.*, t.balance_paid, t.purchase_date, t.buyer_id, u.username as seller_name
+    "SELECT p.id, p.name, p.description, p.image, p.condition, p.category_id, p.seller_id, t.balance_paid AS price, t.purchase_date, t.buyer_id, u.username AS seller_username
     FROM transactions t
     JOIN products p ON t.product_id = p.id
     JOIN users u ON t.seller_id = u.id
