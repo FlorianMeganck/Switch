@@ -37,3 +37,10 @@ B. Points d'entrée Backend (Serveur / API) :
      - Rôle : Point d'entrée transactionnel pour valider les achats, débiter
        les comptes et sécuriser l'échange d'un produit.
        
+
+3. SCRIPTS D'ADMINISTRATION (Sauvegarde)
+
+* Fichier : /sauvegarde_db.sh
+* Rôle : Script automatisé (Bash) permettant de générer des sauvegardes
+         régulières (toutes les heures) de la base de données. Ce script est conçu 
+         pour être planifié via une tâche Cron sur le serveur.

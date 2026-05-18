@@ -261,15 +261,9 @@ createApp({
                 const data = await response.json();
 
                 if (data.success) {
-                    // 1. On rafraîchit la liste des produits
-                    await this.fetchProduits(); 
-                    
-                    // 2. IMPORTANT : On redirige vers le catalogue
-                    this.page = 'troc'; 
-                    
-                    // 3. On vide le produit sélectionné car il n'existe plus
-                    this.selectedProduct = null; 
-                    
+                    await this.fetchProduits();
+                    this.page = 'troc';
+                    this.selectedProduct = null;
                     console.log("Objet supprimé et retour au troc.");
                 } else {
                     this.error = data.message;
@@ -317,7 +311,7 @@ createApp({
                 }
             } catch (err) {
                 console.error("Erreur technique avis :", err);
-                alert("Le serveur n'a pas pu enregistrer ton avis.");
+                alert("Le serveur n'a pas pu enregistrer votre avis.");
             }
         },
 

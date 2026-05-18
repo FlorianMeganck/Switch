@@ -508,6 +508,10 @@
                         <div class="mt-10">
                             <h3 class="text-xl font-bold text-slate-800 mb-4">Mes achats récents</h3>
                             
+                            <a href="api/export_achats.php" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 inline-block text-sm font-semibold mb-4">
+                                📊 Exporter mes achats (Excel)
+                            </a>
+                            
                             <div v-if="mesAchats.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div v-for="achat in mesAchats" :key="achat.id" 
                                     @click="voirProduit(achat)"
