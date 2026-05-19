@@ -37,16 +37,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === 0) {
             $file = $_FILES['product_image'];
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            
+            $maxSize = 2097152;
+            if ($file['size'] > $maxSize) {
+                echo json_encode(['success' => false, 'message' => 'L\'image est trop lourde. Limite fixée à 2 Mo.']);
+                exit;
+            }
+
+            $check = getimagesize($file['tmp_name']);
+            if($check === false) {
+                echo json_encode(['success' => false, 'message' => 'Le fichier n\'est pas une image.']);
+                exit;
+            }
+
             $image_name = uniqid() . '.' . $ext;
             
-            // On va vers uploads
             if (move_uploaded_file($file['tmp_name'], '../uploads/' . $image_name)) {
                 $image_sql = ", image = :img";
             }
         }
 
+        $seller_id = $_SESSION['user_id'];
+
         $sql = "UPDATE products SET name = :n, description = :d, price = :p, `condition` = :co, category_id = :ca $image_sql 
-        WHERE id = :id";
+        WHERE id = :id AND seller_id = :seller_id";
         $st = $connexion->prepare($sql);
         $st->bindParam(':n', $name, PDO::PARAM_STR, 60);
         $st->bindParam(':d', $desc, PDO::PARAM_STR, 500);
@@ -54,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $st->bindParam(':co', $cond, PDO::PARAM_STR, 20);
         $st->bindParam(':ca', $cat, PDO::PARAM_INT);
         $st->bindParam(':id', $id, PDO::PARAM_INT);
+        $st->bindParam(':seller_id', $seller_id, PDO::PARAM_INT);
 
         if (!empty($image_sql)) {
             $st->bindParam(':img', $image_name, PDO::PARAM_STR);

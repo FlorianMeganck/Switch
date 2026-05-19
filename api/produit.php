@@ -26,6 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file = $_FILES['product_image'];
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
+        $maxSize = 2097152;
+        if ($file['size'] > $maxSize) {
+            echo json_encode(['success' => false, 'message' => 'L\'image est trop lourde. Limite fixée à 2 Mo.']);
+            exit;
+        }
+
         // Sécurité : vérification du contenu réel
         $check = getimagesize($file['tmp_name']);
         if($check === false) {

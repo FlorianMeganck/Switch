@@ -106,6 +106,12 @@ createApp({
         },
 
         async register() {
+
+            if (this.register_form.password.length < 6) {
+                this.error = "Le mot de passe doit contenir au moins 6 caractères.";
+                return;
+            }
+
             try {
                 const response = await fetch('api/inscription.php', { 
                     method: 'POST', 
@@ -156,7 +162,17 @@ createApp({
 
         // 4. ACTIONS SUR LES PRODUITS
         handleFileUpload(event) {
-            this.selectedFile = event.target.files[0];
+            const file = event.target.files[0];
+            if (!file) return;
+            const maxSize = 2097152; 
+            if (file.size > maxSize) {
+                alert("Cette image est trop lourde ! Limite réseau fixée à 2 Mo pour préserver le serveur.");
+                event.target.value = "";
+                this.selectedFile = null;
+                return;
+            }
+
+            this.selectedFile = file;
         },
 
         async vendreProduit() {
