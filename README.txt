@@ -9,7 +9,7 @@ d'entrée de l'application Switch, conformément aux consignes reçues.
 L'accès à la base de données relationnelle (MySQL via l'API PDO de PHP)
 est centralisé et configuré à l'emplacement suivant :
 
-* Fichier : /api/config.php
+* Fichier : /api/config/db_access.php
 * Rôle : Contient les constantes de connexion (Hôte, Nom de la base,
          Identifiant, Mot de passe) et initialise l'instance de connexion.
          Ce fichier est inclus au début de chaque script de l'API via 
